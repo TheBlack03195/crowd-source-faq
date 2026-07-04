@@ -12,6 +12,12 @@ import { logger } from './utils/logger.js';
 
 import healthRoutes from './routes/health.js';
 import authRoutes from './routes/auth.js';
+import faqRoutes from './routes/faq.js';
+import searchRoutes from './routes/search.js';
+import batchRoutes from './routes/batch.js';
+import publicFaqRoutes from './routes/publicFaq.js';
+import communityRoutes from './routes/community.js';
+import reputationRoutes from './routes/reputation.js';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 6767;
@@ -29,6 +35,12 @@ app.use(globalLimiter);
 
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/faq', faqRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/batches', batchRoutes);
+app.use('/api/public', publicFaqRoutes);
+app.use('/api/community', communityRoutes);
+app.use('/api/reputation', reputationRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
