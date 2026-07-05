@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 import express from 'express';
@@ -18,9 +19,15 @@ import batchRoutes from './routes/batch.js';
 import publicFaqRoutes from './routes/publicFaq.js';
 import communityRoutes from './routes/community.js';
 import reputationRoutes from './routes/reputation.js';
+import adminAutoAnswerRoutes from './routes/adminAutoAnswer.js';
+import adminAuditRoutes from './routes/adminAudit.js';
+import zoomRoutes from './routes/zoom.js';
+import knowledgeRoutes from './routes/knowledge.js';
+import { startSchedulers } from './utils/scheduler.js';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 6767;
+
 
 app.use(
   cors({
@@ -33,6 +40,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '2mb' }));
 app.use(globalLimiter);
 
+
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/faq', faqRoutes);
@@ -41,6 +49,11 @@ app.use('/api/batches', batchRoutes);
 app.use('/api/public', publicFaqRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/reputation', reputationRoutes);
+app.use('/api/admin', adminAutoAnswerRoutes);
+app.use('/api/admin', adminAuditRoutes);
+app.use('/api/zoom', zoomRoutes);
+app.use('/api/knowledge', knowledgeRoutes);
+
 
 app.use((req, res) => {
   res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
@@ -60,6 +73,13 @@ async function start() {
     app.listen(PORT, () => {
       logger.info(`Backend listening on http://localhost:${PORT}`);
     });
+
+    
+    if (process.env.ENABLE_SCHEDULERS === 'true') {
+      startSchedulers();
+    } else {
+      logger.info('Schedulers disabled (set ENABLE_SCHEDULERS=true to enable). Manual admin trigger endpoints still work.');
+    }
   } catch (err) {
     logger.error('Failed to start server', { err });
     process.exit(1);

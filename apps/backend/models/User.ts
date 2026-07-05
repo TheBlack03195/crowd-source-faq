@@ -13,6 +13,11 @@ export interface IUser extends Document {
   isDeleted: boolean;
   deletedAt: Date | null;
   reputation: number;
+ 
+  zoomAccessTokenEnc?: string;
+  zoomRefreshTokenEnc?: string;
+  zoomTokenExpiresAt?: Date;
+  zoomUserId?: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -40,9 +45,14 @@ const userSchema = new Schema<IUser>(
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null },
     reputation: { type: Number, default: 0 },
+    zoomAccessTokenEnc: { type: String, select: false },
+    zoomRefreshTokenEnc: { type: String, select: false },
+    zoomTokenExpiresAt: { type: Date },
+    zoomUserId: { type: String },
   },
   { timestamps: true }
 );
+
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
