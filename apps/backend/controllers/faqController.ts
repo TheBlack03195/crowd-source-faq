@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { FAQ } from '../models/FAQ.js';
 import { Category } from '../models/Category.js';
 import { sanitizeText } from '../utils/sanitize.js';
+import { tryGenerateEmbedding } from '../utils/embeddings.js';
 
 export const createFaqSchema = z.object({
   question: z.string().trim().min(5).max(500),
@@ -56,13 +57,20 @@ export async function createFaq(req: Request, res: Response) {
   const category = await Category.findById(body.categoryId);
   if (!category) return res.status(400).json({ error: 'categoryId does not reference a real category' });
 
+  const question = sanitizeText(body.question);
+  const answer = sanitizeText(body.answer);
+
+
+  const embedding = await tryGenerateEmbedding(`${question}\n${answer}`);
+
   const faq = await FAQ.create({
-    question: sanitizeText(body.question),
-    answer: sanitizeText(body.answer),
+    question,
+    answer,
     categoryId: body.categoryId,
     batchId: body.batchId || null,
     tags: body.tags || [],
     createdBy: req.user!._id,
+    ...(embedding ? { embedding } : {}),
   });
 
   res.status(201).json({ faq });
@@ -73,6 +81,17 @@ export async function updateFaq(req: Request, res: Response) {
   const update: Record<string, unknown> = { ...body };
   if (body.question) update.question = sanitizeText(body.question);
   if (body.answer) update.answer = sanitizeText(body.answer);
+
+  // Re-embed if the text content changed — a stale embedding is worse
+  // than no embedding (it'd rank the FAQ for its *old* meaning).
+  if (body.question || body.answer) {
+    const existing = await FAQ.findById(req.params.id).select('question answer');
+    if (!existing) return res.status(404).json({ error: 'FAQ not found' });
+    const question = (update.question as string) || existing.question;
+    const answer = (update.answer as string) || existing.answer;
+    const embedding = await tryGenerateEmbedding(`${question}\n${answer}`);
+    if (embedding) update.embedding = embedding;
+  }
 
   const faq = await FAQ.findByIdAndUpdate(req.params.id, update, { new: true });
   if (!faq) return res.status(404).json({ error: 'FAQ not found' });
