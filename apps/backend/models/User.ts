@@ -13,11 +13,14 @@ export interface IUser extends Document {
   isDeleted: boolean;
   deletedAt: Date | null;
   reputation: number;
- 
+  
   zoomAccessTokenEnc?: string;
   zoomRefreshTokenEnc?: string;
   zoomTokenExpiresAt?: Date;
   zoomUserId?: string;
+  
+  sp: number;
+  lastGoldenSubmissionAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -49,6 +52,8 @@ const userSchema = new Schema<IUser>(
     zoomRefreshTokenEnc: { type: String, select: false },
     zoomTokenExpiresAt: { type: Date },
     zoomUserId: { type: String },
+    sp: { type: Number, default: 100 }, 
+    lastGoldenSubmissionAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

@@ -76,5 +76,20 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function getMe(req: Request, res: Response) {
+  
   return res.json({ user: publicUser(req.user!) });
+}
+
+
+export async function deleteAccount(req: Request, res: Response) {
+  const user = req.user!;
+
+  user.isDeleted = true;
+  user.deletedAt = new Date();
+  user.name = 'Deleted User';
+  user.email = `deleted-${user._id}@yaksha.invalid`;
+  user.password = randomUUID(); 
+  await user.save();
+
+  res.status(204).send();
 }
