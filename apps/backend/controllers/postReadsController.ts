@@ -2,11 +2,15 @@ import type { Request, Response } from 'express';
 import { CommunityPost } from '../models/CommunityPost.js';
 
 export async function listPosts(req: Request, res: Response) {
-  const { categoryId, batchId, status, page = '1', limit = '20' } = req.query as Record<string, string>;
+  const { categoryId, batchId, status, isReported, page = '1', limit = '20' } = req.query as Record<
+    string,
+    string
+  >;
   const filter: Record<string, unknown> = { isTakenDown: false };
   if (categoryId) filter.categoryId = categoryId;
   if (batchId) filter.batchId = batchId;
   if (status) filter.status = status;
+  if (isReported === 'true') filter.isReported = true;
 
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
   const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 20));

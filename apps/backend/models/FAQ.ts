@@ -2,6 +2,7 @@ import mongoose, { Schema, type Document, type Model } from 'mongoose';
 
 export type FreshnessTier = 'evergreen' | 'seasonal' | 'volatile';
 export type ReviewStatus = 'approved' | 'pending_review';
+export type FlagType = 'auto' | 'manual' | null;
 
 export interface IFAQ extends Document {
   question: string;
@@ -15,7 +16,8 @@ export interface IFAQ extends Document {
   freshnessTier: FreshnessTier;
   reviewStatus: ReviewStatus;
   lastVerifiedAt: Date;
-  
+  reviewCycle: number;
+  flagType: FlagType;
   embedding?: number[];
   createdAt: Date;
   updatedAt: Date;
@@ -43,10 +45,13 @@ const faqSchema = new Schema<IFAQ>(
       index: true,
     },
     lastVerifiedAt: { type: Date, default: () => new Date() },
+    reviewCycle: { type: Number, default: 0 },
+    flagType: { type: String, enum: ['auto', 'manual', null], default: null },
     embedding: { type: [Number], select: false },
   },
   { timestamps: true }
 );
+
 
 faqSchema.index({ question: 'text', answer: 'text', tags: 'text' });
 

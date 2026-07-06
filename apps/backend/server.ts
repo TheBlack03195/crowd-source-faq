@@ -23,6 +23,14 @@ import adminAutoAnswerRoutes from './routes/adminAutoAnswer.js';
 import adminAuditRoutes from './routes/adminAudit.js';
 import zoomRoutes from './routes/zoom.js';
 import knowledgeRoutes from './routes/knowledge.js';
+import freshnessRoutes from './routes/freshness.js';
+import moderationRoutes from './routes/moderation.js';
+import appSettingsRoutes from './routes/appSettings.js';
+import featureFlagRoutes from './routes/featureFlag.js';
+import supportRoutes from './routes/support.js';
+import adminRoutes from './routes/admin.js';
+import metricsRoutes from './routes/metrics.js';
+import { metricsMiddleware } from './middleware/metrics.js';
 import { startSchedulers } from './utils/scheduler.js';
 
 const app = express();
@@ -39,6 +47,7 @@ app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '2mb' }));
 app.use(globalLimiter);
+app.use(metricsMiddleware);
 
 
 app.use('/api/health', healthRoutes);
@@ -53,6 +62,13 @@ app.use('/api/admin', adminAutoAnswerRoutes);
 app.use('/api/admin', adminAuditRoutes);
 app.use('/api/zoom', zoomRoutes);
 app.use('/api/knowledge', knowledgeRoutes);
+app.use('/api/freshness', freshnessRoutes);
+app.use('/api/moderation', moderationRoutes);
+app.use('/api/app-settings', appSettingsRoutes);
+app.use('/api/feature-flags', featureFlagRoutes);
+app.use('/api/support', supportRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/metrics', metricsRoutes);
 
 
 app.use((req, res) => {
@@ -74,7 +90,7 @@ async function start() {
       logger.info(`Backend listening on http://localhost:${PORT}`);
     });
 
-    
+  
     if (process.env.ENABLE_SCHEDULERS === 'true') {
       startSchedulers();
     } else {

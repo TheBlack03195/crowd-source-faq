@@ -98,9 +98,10 @@ export async function logPipelineEvent(params: {
 
 export function buildAuditMetaUpdate(verdict: 'correct' | 'drift_detected' | 'contradiction' | 'stale') {
   if (verdict === 'correct') {
-    return { lastVerifiedAt: new Date() };
+    return { $set: { lastVerifiedAt: new Date() } };
   }
   return {
-    reviewStatus: 'pending_review' as const,
+    $set: { reviewStatus: 'pending_review' as const, flagType: 'auto' as const },
+    $inc: { reviewCycle: 1 },
   };
 }

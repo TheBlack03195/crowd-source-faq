@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import type { Request, Response } from 'express';
 import { runAutoAnswer } from '../controllers/autoAnswerController.js';
 import { runFaqAudit } from '../controllers/faqAuditController.js';
+import { runFreshnessCheck } from '../controllers/freshnessController.js';
 import { logger } from './logger.js';
 
 
@@ -18,6 +19,17 @@ function fakeReqRes() {
 export function startSchedulers() {
   const autoAnswerCron = process.env.AUTO_ANSWER_CRON_SCHEDULE || '0 0 * * *'; 
   const faqAuditCron = process.env.FAQ_AUDIT_CRON_SCHEDULE || '0 */6 * * *'; 
+  const freshnessCron = process.env.FAQ_FRESHNESS_CRON_SCHEDULE || '0 6 * * *'; 
+
+  cron.schedule(freshnessCron, async () => {
+    logger.info('[scheduler] Running FAQ freshness check');
+    const { req, res } = fakeReqRes();
+    try {
+      await runFreshnessCheck(req, res);
+    } catch (err) {
+      logger.error('[scheduler] freshness check failed', { message: (err as Error).message });
+    }
+  });
 
   cron.schedule(autoAnswerCron, async () => {
     logger.info('[scheduler] Running auto-answer pipeline');
@@ -39,5 +51,5 @@ export function startSchedulers() {
     }
   });
 
-  logger.info('[scheduler] Pipelines scheduled', { autoAnswerCron, faqAuditCron });
+  logger.info('[scheduler] Pipelines scheduled', { autoAnswerCron, faqAuditCron, freshnessCron });
 }

@@ -5,6 +5,7 @@ import { Button } from './Button';
 export function Navbar() {
   const { isAuthenticated, isLoading, user, logout } = useAuth();
   const navigate = useNavigate();
+  const isStaff = user?.role === 'admin' || user?.role === 'moderator';
 
   return (
     <nav className="flex items-center justify-between border-b border-slate-200 px-6 py-3">
@@ -22,6 +23,24 @@ export function Navbar() {
           <Link to="/leaderboard" className="hover:text-emerald-700">
             Leaderboard
           </Link>
+          {isAuthenticated && (
+            <>
+              <Link to="/golden" className="hover:text-emerald-700">
+                Golden Ticket
+              </Link>
+              <Link to="/support" className="hover:text-emerald-700">
+                Support
+              </Link>
+              <Link to="/faq/review-queue" className="hover:text-emerald-700">
+                Review Queue
+              </Link>
+            </>
+          )}
+          {isStaff && (
+            <Link to="/admin" className="font-medium text-emerald-700 hover:text-emerald-800">
+              Admin
+            </Link>
+          )}
         </div>
       </div>
 

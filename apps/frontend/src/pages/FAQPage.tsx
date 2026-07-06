@@ -82,7 +82,21 @@ export function FAQPage() {
               <span className="text-slate-400">{openId === faq._id ? '−' : '+'}</span>
             </button>
             {openId === faq._id && (
-              <div className="border-t border-slate-100 px-4 py-3 text-sm text-slate-600">{faq.answer}</div>
+              <div className="border-t border-slate-100 px-4 py-3 text-sm text-slate-600">
+                {faq.answer}
+                <div className="mt-3">
+                  <button
+                    onClick={async () => {
+                      const reason = prompt('Why does this need review? (optional)') || undefined;
+                      await api.post(`/freshness/${faq._id}/flag-outdated`, { reason });
+                      alert('Thanks — flagged for review.');
+                    }}
+                    className="text-xs text-amber-600 hover:underline"
+                  >
+                    ⚠ Flag as outdated
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         ))}
