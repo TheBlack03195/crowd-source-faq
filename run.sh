@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKEND_ENV="$ROOT_DIR/apps/backend/.env.local"
+BACKEND_ENV="$ROOT_DIR/apps/backend/.env"
 LOG_DIR="$ROOT_DIR/logs"
 mkdir -p "$LOG_DIR"
 SESSION_LOG="$LOG_DIR/session_$(date +%Y%m%d_%H%M%S).txt"
@@ -34,7 +34,7 @@ else
 fi
 
 if [ ! -f "$ROOT_DIR/apps/frontend/.env.local" ]; then
-  cp "$ROOT_DIR/apps/frontend/.env.example" "$ROOT_DIR/apps/frontend/.env.local"
+  cp "$ROOT_DIR/apps/frontend/.env" "$ROOT_DIR/apps/frontend/.env.local"
 fi
 
 
