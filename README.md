@@ -40,6 +40,7 @@ CSS 4, Axios.
 meeting ingestion, AES-256-GCM token encryption.
 
 ## Folder structure
+
 crowd-source-faq/
 ├── run.sh                      # one-command local dev runner (env setup + both servers)
 ├── docs/
