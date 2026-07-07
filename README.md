@@ -58,7 +58,7 @@ crowd-source-faq/
 │   │   ├── services/                  # cross-cutting business logic (knowledge base dual-publish)
 │   │   ├── scripts/                    # one-off ops scripts (backfill embeddings, create vector index)
 │   │   ├── types/                       # ambient TypeScript declarations (Express req augmentation)
-│   │   └── tests/                    # Vitest unit tests
+│   │   └── __tests__/                    # Vitest unit tests
 │   │
 │   └── frontend/                # React + Vite SPA
 │       ├── src/
@@ -69,9 +69,7 @@ crowd-source-faq/
 │       │   │   ├── pages/                # one component per /admin/* route
 │       │   │   └── components/            # AdminLayout (sidebar), AdminRoute (role guard), shared widgets
 │       │   ├── components/ui/              # shared UI: Navbar, Button, SearchBar, ChatWidget, ProtectedRoute
-│       │   ├── hooks/                        # useAuth (auth context)
-│       │   └── utils/                         # api.ts (axios instance), types.ts (shared TS types)
-│       └── public/                              # static assets (favicon, etc.)
+│
 
 ## Getting started
 
