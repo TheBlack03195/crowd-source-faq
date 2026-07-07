@@ -28,6 +28,7 @@ export async function addComment(req: Request, res: Response) {
     downvotes: 0,
     votedBy: [],
     isDeleted: false,
+    isReported: false,
     createdAt: new Date(),
     updatedAt: new Date(),
   } as any);
@@ -73,6 +74,7 @@ export async function deleteComment(req: Request, res: Response) {
   res.json({ post });
 }
 
+
 export async function acceptAnswer(req: Request, res: Response) {
   const post = await CommunityPost.findById(req.params.postId);
   if (!post) return res.status(404).json({ error: 'Post not found' });
@@ -86,7 +88,7 @@ export async function acceptAnswer(req: Request, res: Response) {
   const comment = post.comments.id(req.params.commentId);
   if (!comment) return res.status(404).json({ error: 'Comment not found' });
 
-
+  
   if (post.acceptedCommentId) {
     const prev = post.comments.id(post.acceptedCommentId);
     if (prev && prev.isAccepted) {

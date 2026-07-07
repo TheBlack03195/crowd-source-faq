@@ -4,6 +4,7 @@ import { adminOnly } from '../middleware/admin.js';
 import {
   createSupportRequest,
   listMySupportRequests,
+  listAllSupportRequests,
   getSupportRequest,
   addFollowUp,
   updateSupportStatus,
@@ -28,6 +29,7 @@ const router = Router();
 
 
 router.post('/', protect, createSupportRequest);
+router.get('/', ...adminOnly, listAllSupportRequests);
 router.get('/mine', protect, listMySupportRequests);
 router.get('/analytics', ...adminOnly, supportAnalytics);
 router.get('/:id', protect, getSupportRequest);

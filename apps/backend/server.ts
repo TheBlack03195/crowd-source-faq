@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 import express from 'express';
@@ -15,6 +14,7 @@ import healthRoutes from './routes/health.js';
 import authRoutes from './routes/auth.js';
 import faqRoutes from './routes/faq.js';
 import searchRoutes from './routes/search.js';
+import chatWidgetRoutes from './routes/chatWidget.js';
 import batchRoutes from './routes/batch.js';
 import publicFaqRoutes from './routes/publicFaq.js';
 import communityRoutes from './routes/community.js';
@@ -54,6 +54,7 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/chat', chatWidgetRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/public', publicFaqRoutes);
 app.use('/api/community', communityRoutes);
@@ -90,7 +91,7 @@ async function start() {
       logger.info(`Backend listening on http://localhost:${PORT}`);
     });
 
-  
+    
     if (process.env.ENABLE_SCHEDULERS === 'true') {
       startSchedulers();
     } else {

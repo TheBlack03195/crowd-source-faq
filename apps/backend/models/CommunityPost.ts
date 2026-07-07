@@ -13,6 +13,7 @@ export interface IComment extends Types.Subdocument {
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
+  isReported: boolean;
 }
 
 export interface ICommunityPost extends Document {
@@ -48,6 +49,7 @@ const commentSchema = new Schema<IComment>(
       },
     ],
     isDeleted: { type: Boolean, default: false },
+    isReported: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
