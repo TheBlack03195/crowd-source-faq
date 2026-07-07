@@ -40,6 +40,8 @@ CSS 4, Axios.
 meeting ingestion, AES-256-GCM token encryption.
 
 ## Folder structure
+
+```
 crowd-source-faq/
 ├── run.sh                      # one-command local dev runner (env setup + both servers)
 ├── docs/
@@ -57,7 +59,7 @@ crowd-source-faq/
 │   │   ├── services/                  # cross-cutting business logic (knowledge base dual-publish)
 │   │   ├── scripts/                    # one-off ops scripts (backfill embeddings, create vector index)
 │   │   ├── types/                       # ambient TypeScript declarations (Express req augmentation)
-│   │   └── tests/                    # Vitest unit tests
+│   │   └── __tests__/                    # Vitest unit tests
 │   │
 │   └── frontend/                # React + Vite SPA
 │       ├── src/
@@ -71,6 +73,7 @@ crowd-source-faq/
 │       │   ├── hooks/                        # useAuth (auth context)
 │       │   └── utils/                         # api.ts (axios instance), types.ts (shared TS types)
 │       └── public/                              # static assets (favicon, etc.)
+```
 
 ## Getting started
 
@@ -113,7 +116,9 @@ JWT carries the updated role), then visit `/admin`.
 
 ### Enabling AI features
 Add to `apps/backend/.env.local`:
+```
 GEMINI_API_KEY=your-gemini-api-key-here
+```
 That's the only required addition — powers the chat widget, community
 auto-answer pipeline, and FAQ audit pipeline. Full list of every env
 var (Zoom OAuth, scheduler cron settings, freshness thresholds, etc.)
