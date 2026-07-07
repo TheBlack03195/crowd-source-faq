@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../utils/api';
 import { Button } from '../../components/ui/Button';
+import { AdminCreateFaqForm } from '../components/AdminCreateFaqForm';
 
 interface FlaggedFaq {
   _id: string;
@@ -64,6 +65,8 @@ export function AdminFaqReview() {
           </Button>
         </div>
       </div>
+
+      <AdminCreateFaqForm />
 
       {loading && <p className="text-sm text-slate-500">Loading…</p>}
       {!loading && items.length === 0 && (

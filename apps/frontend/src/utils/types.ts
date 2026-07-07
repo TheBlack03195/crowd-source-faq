@@ -30,6 +30,7 @@ export interface Comment {
   upvotes: number;
   downvotes: number;
   isDeleted: boolean;
+  isReported: boolean;
   createdAt: string;
 }
 
@@ -44,5 +45,12 @@ export interface CommunityPost {
   upvotes: number;
   comments: Comment[];
   acceptedCommentId: string | null;
+  isReported?: boolean;
   createdAt: string;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  matchedFaqs?: { _id: string; question: string }[];
 }

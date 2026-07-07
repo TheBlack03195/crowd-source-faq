@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../utils/api';
 import { SearchBar } from '../components/ui/SearchBar';
+import { ChatWidget } from '../components/ui/ChatWidget';
 import type { Faq, Category } from '../utils/types';
 
 export function FAQPage() {
@@ -101,6 +102,8 @@ export function FAQPage() {
           </div>
         ))}
       </div>
+
+      <ChatWidget />
     </div>
   );
 }

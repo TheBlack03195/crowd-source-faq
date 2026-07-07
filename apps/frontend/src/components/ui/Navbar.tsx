@@ -17,9 +17,20 @@ export function Navbar() {
           <Link to="/faq" className="hover:text-emerald-700">
             FAQs
           </Link>
+          <Link to="/faq/voice" className="hover:text-emerald-700">
+            Voice
+          </Link>
           <Link to="/community" className="hover:text-emerald-700">
             Community
           </Link>
+          <a
+            href="https://samagama.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-emerald-700"
+          >
+            samagama.in
+          </a>
           <Link to="/leaderboard" className="hover:text-emerald-700">
             Leaderboard
           </Link>

@@ -1,8 +1,7 @@
 import { chatGemini, type ChatOptions } from './aiClient.js';
 
-export type PipelineKey = 'AUTO_ANSWER' | 'FAQ_AUDIT' | 'ZOOM_EXTRACTOR';
+export type PipelineKey = 'AUTO_ANSWER' | 'FAQ_AUDIT' | 'ZOOM_EXTRACTOR' | 'CHAT_WIDGET';
 export type AiProvider = 'gemini'; 
-
 export interface PipelineProviderConfig {
   provider: AiProvider;
   model: string;

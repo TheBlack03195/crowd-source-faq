@@ -57,6 +57,18 @@ export function PostDetailPage() {
     load();
   }
 
+  async function handleReportPost() {
+    if (!confirm('Report this post to moderators?')) return;
+    await api.post(`/community/posts/${id}/report`);
+    alert('Reported. A moderator will take a look.');
+  }
+
+  async function handleReportComment(commentId: string) {
+    if (!confirm('Report this comment to moderators?')) return;
+    await api.post(`/community/posts/${id}/comments/${commentId}/report`);
+    alert('Reported. A moderator will take a look.');
+  }
+
   if (loading) return <p className="mx-auto mt-10 max-w-3xl px-4 text-sm text-slate-500">Loading…</p>;
   if (!post) return <p className="mx-auto mt-10 max-w-3xl px-4 text-sm text-slate-500">Post not found.</p>;
 
@@ -92,6 +104,11 @@ export function PostDetailPage() {
                 ▼
               </button>
             </div>
+          )}
+          {isAuthenticated && !isPostAuthor && (
+            <button onClick={handleReportPost} className="text-slate-400 hover:text-red-600 hover:underline">
+              ⚑ Report
+            </button>
           )}
         </div>
       </div>
@@ -138,6 +155,14 @@ export function PostDetailPage() {
                   </button>
                 )}
                 {c.isAccepted && <span className="font-medium text-emerald-700">✓ Accepted</span>}
+                {isAuthenticated && authorId(c.authorId) !== user?.id && (
+                  <button
+                    onClick={() => handleReportComment(c._id)}
+                    className="text-slate-400 hover:text-red-600 hover:underline"
+                  >
+                    {c.isReported ? 'Reported' : '⚑ Report'}
+                  </button>
+                )}
               </div>
             </div>
           ))}

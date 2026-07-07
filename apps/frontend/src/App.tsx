@@ -7,6 +7,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AccountPage } from './pages/AccountPage';
 import { FAQPage } from './pages/FAQPage';
+import { VoiceFaqPage } from './pages/VoiceFaqPage';
 import { CommunityPage } from './pages/CommunityPage';
 import { PostDetailPage } from './pages/PostDetailPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
@@ -23,6 +24,7 @@ import { AdminCommunity } from './admin/pages/AdminCommunity';
 import { AdminUsers } from './admin/pages/AdminUsers';
 import { AdminZoom } from './admin/pages/AdminZoom';
 import { AdminSettings } from './admin/pages/AdminSettings';
+import { AdminSupport } from './admin/pages/AdminSupport';
 
 export default function App() {
   return (
@@ -32,6 +34,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/faq" element={<FAQPage />} />
+          <Route path="/faq/voice" element={<VoiceFaqPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/community/:id" element={<PostDetailPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
@@ -87,6 +90,16 @@ export default function App() {
               <AdminRoute>
                 <AdminLayout>
                   <AdminCommunity />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/support"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminSupport />
                 </AdminLayout>
               </AdminRoute>
             }

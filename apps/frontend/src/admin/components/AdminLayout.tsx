@@ -6,6 +6,7 @@ const links = [
   { to: '/admin/faq-review', label: 'FAQ Review' },
   { to: '/admin/auto-answer', label: 'Auto-Answer Queue' },
   { to: '/admin/community', label: 'Community Moderation' },
+  { to: '/admin/support', label: 'Support Tickets' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/zoom', label: 'Zoom Ingestion' },
   { to: '/admin/settings', label: 'Settings' },

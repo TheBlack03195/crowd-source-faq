@@ -39,6 +39,28 @@ export async function listMySupportRequests(req: Request, res: Response) {
   res.json({ requests });
 }
 
+
+export async function listAllSupportRequests(req: Request, res: Response) {
+  const { status, issueType, page = '1', limit = '20' } = req.query as Record<string, string>;
+  const filter: Record<string, unknown> = {};
+  if (status) filter.status = status;
+  if (issueType) filter.issueType = issueType;
+
+  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 20));
+
+  const [items, total] = await Promise.all([
+    SupportRequest.find(filter)
+      .sort({ isGolden: -1, createdAt: -1 })
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .populate('userId', 'name email'),
+    SupportRequest.countDocuments(filter),
+  ]);
+
+  res.json({ items, total, page: pageNum, limit: limitNum });
+}
+
 export async function getSupportRequest(req: Request, res: Response) {
   const request = await SupportRequest.findById(req.params.id).populate('followUps.authorId', 'name role');
   if (!request) return res.status(404).json({ error: 'Support request not found' });
