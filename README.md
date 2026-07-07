@@ -41,6 +41,7 @@ meeting ingestion, AES-256-GCM token encryption.
 
 ## Folder structure
 
+```
 crowd-source-faq/
 ├── run.sh                      # one-command local dev runner (env setup + both servers)
 ├── docs/
@@ -69,7 +70,10 @@ crowd-source-faq/
 │       │   │   ├── pages/                # one component per /admin/* route
 │       │   │   └── components/            # AdminLayout (sidebar), AdminRoute (role guard), shared widgets
 │       │   ├── components/ui/              # shared UI: Navbar, Button, SearchBar, ChatWidget, ProtectedRoute
-│
+│       │   ├── hooks/                        # useAuth (auth context)
+│       │   └── utils/                         # api.ts (axios instance), types.ts (shared TS types)
+│       └── public/                              # static assets (favicon, etc.)
+```
 
 ## Getting started
 
@@ -112,7 +116,9 @@ JWT carries the updated role), then visit `/admin`.
 
 ### Enabling AI features
 Add to `apps/backend/.env.local`:
+```
 GEMINI_API_KEY=your-gemini-api-key-here
+```
 That's the only required addition — powers the chat widget, community
 auto-answer pipeline, and FAQ audit pipeline. Full list of every env
 var (Zoom OAuth, scheduler cron settings, freshness thresholds, etc.)
