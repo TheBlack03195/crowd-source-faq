@@ -80,6 +80,13 @@ const communityPostSchema = new Schema<ICommunityPost>(
 
 communityPostSchema.index({ title: 'text', body: 'text', tags: 'text' });
 
+communityPostSchema.virtual('commentCount').get(function() {
+  return this.comments ? this.comments.length : 0;
+});
+
+
+communityPostSchema.set('toJSON', { virtuals: true });
+communityPostSchema.set('toObject', { virtuals: true });
 export const CommunityPost: Model<ICommunityPost> =
   mongoose.models.CommunityPost ||
   mongoose.model<ICommunityPost>('CommunityPost', communityPostSchema, 'yaksha_faq_communityposts');

@@ -11,6 +11,7 @@ interface DashboardStats {
   openSupportTickets: number;
   goldenTickets: number;
   failedZoomMeetings: number;
+  duplicatesPrevented: number;
   recentPipelineActivity: Array<{
     _id: string;
     pipeline: string;
@@ -55,6 +56,12 @@ export function AdminDashboard() {
           value={stats.failedZoomMeetings}
           tone={stats.failedZoomMeetings > 0 ? 'danger' : 'default'}
         />
+        <AdminStatCard
+          label="Failed Zoom meetings"
+          value={stats.failedZoomMeetings}
+          tone={stats.failedZoomMeetings > 0 ? 'danger' : 'default'}
+        />
+         <AdminStatCard label="Duplicates prevented" value={stats.duplicatesPrevented} tone="default" />
       </div>
 
       <h2 className="mt-8 mb-3 text-sm font-semibold text-slate-700">Recent pipeline activity</h2>

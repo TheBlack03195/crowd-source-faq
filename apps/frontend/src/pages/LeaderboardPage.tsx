@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../utils/api';
+import { StatusPill } from '../components/ui/StatusPill';
+import { LoadingRow } from '../components/ui/Spinner';
 
 interface LeaderboardUser {
   _id: string;
@@ -7,6 +9,8 @@ interface LeaderboardUser {
   reputation: number;
   role: string;
 }
+
+const medal = ['🥇', '🥈', '🥉'];
 
 export function LeaderboardPage() {
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
@@ -20,23 +24,23 @@ export function LeaderboardPage() {
   }, []);
 
   return (
-    <div className="mx-auto mt-10 max-w-xl px-4">
-      <h1 className="mb-4 text-2xl font-semibold text-slate-900">Leaderboard</h1>
-      {loading && <p className="text-sm text-slate-500">Loading…</p>}
-      <ol className="space-y-1">
+    <div className="mx-auto max-w-xl px-6 py-12">
+      <span className="font-mono text-xs uppercase tracking-[0.15em] text-forest">Standings</span>
+      <h1 className="mt-1 font-display text-3xl font-semibold text-ink">Leaderboard</h1>
+
+      {loading && <LoadingRow />}
+      <ol className="mt-6 space-y-1.5">
         {users.map((u, i) => (
           <li
             key={u._id}
-            className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-2 text-sm"
+            className="flex items-center justify-between rounded-lg border border-mist bg-white px-4 py-3"
           >
             <span className="flex items-center gap-3">
-              <span className="w-6 text-slate-400">{i + 1}</span>
-              <span className="font-medium text-slate-900">{u.name}</span>
-              {u.role !== 'user' && (
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">{u.role}</span>
-              )}
+              <span className="w-6 text-center font-mono text-sm text-ink-soft">{medal[i] ?? i + 1}</span>
+              <span className="text-sm font-medium text-ink">{u.name}</span>
+              {u.role !== 'user' && <StatusPill tone="forest">{u.role}</StatusPill>}
             </span>
-            <span className="font-semibold text-emerald-700">{u.reputation} pts</span>
+            <span className="font-mono text-sm font-semibold text-forest">{u.reputation} pts</span>
           </li>
         ))}
       </ol>

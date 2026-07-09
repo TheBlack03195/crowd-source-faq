@@ -8,7 +8,7 @@ export interface PipelineProviderConfig {
 }
 
 const DEFAULT_MODEL_BY_PROVIDER: Record<AiProvider, string> = {
-  gemini: 'gemini-1.5-flash',
+  gemini: 'gemini-2.5-flash',
 };
 
 

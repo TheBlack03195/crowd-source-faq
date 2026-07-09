@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../utils/api';
-import type { Faq } from '../utils/types';
 
+interface MatchedFaq {
+  _id: string;
+  question: string;
+  answer?: string; 
+}
 
 interface SpeechRecognitionLike extends EventTarget {
   lang: string;
@@ -25,10 +29,18 @@ export function VoiceFaqPage() {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [typedQuery, setTypedQuery] = useState('');
-  const [matches, setMatches] = useState<Faq[]>([]);
+  const [matches, setMatches] = useState<MatchedFaq[]>([]);
+  const [aiReply, setAiReply] = useState('');
   const [searching, setSearching] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const [status, setStatus] = useState('Microphone ready…');
+  
+  // Accordion state
+  const [openId, setOpenId] = useState<string | null>(null);
+
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const languageRef = useRef(language);
+  languageRef.current = language;
 
   useEffect(() => {
     const SpeechRecognition = getSpeechRecognition();
@@ -39,7 +51,6 @@ export function VoiceFaqPage() {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-IN';
     recognition.continuous = false;
     recognition.interimResults = true;
 
@@ -67,10 +78,16 @@ export function VoiceFaqPage() {
       recognitionRef.current.stop();
       setListening(false);
     } else {
+      recognitionRef.current.lang = languageRef.current === 'hi' ? 'hi-IN' : 'en-IN';
       setTranscript('');
-      setStatus('Listening…');
+      setStatus(language === 'hi' ? 'Sun raha hoon…' : 'Listening…');
       setListening(true);
-      recognitionRef.current.start();
+      try {
+        recognitionRef.current.start();
+      } catch (err) {
+        setStatus('Microphone permission denied.');
+        setListening(false);
+      }
     }
   }
 
@@ -78,104 +95,169 @@ export function VoiceFaqPage() {
     const query = q.trim();
     if (!query) return;
     setSearching(true);
+    setAiReply('');
+    setOpenId(null); 
+    
     try {
-      const { data } = await api.get('/search', { params: { q: query } });
-      setMatches(data.results || []);
+      if (language === 'hi') {
+        const { data } = await api.post('/chat', { message: query, language: 'hi' });
+        setAiReply(data.reply);
+        setMatches(data.matchedFaqs || []);
+      } else {
+        const { data } = await api.get('/search', { params: { q: query } });
+        setMatches(data.results || []);
+      }
+    } catch (err) {
+      console.error('Search failed', err);
     } finally {
       setSearching(false);
     }
   }
 
-  
   useEffect(() => {
     if (!listening && transcript.trim()) {
       runSearch(transcript);
     }
-    
   }, [listening]);
 
   return (
-    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-b from-[#160b2e] to-[#0c0817] px-4 py-10 text-slate-100">
+    <div className="min-h-[calc(100vh-57px)] bg-slate-950 px-4 py-10 text-slate-200">
       <div className="mx-auto max-w-xl text-center">
         <h1 className="text-3xl font-bold text-white">FAQ Voice Bot</h1>
-        <p className="mt-1 text-sm text-indigo-300">Samagama · Vicharanashala Internship</p>
+        <p className="mt-2 text-sm text-emerald-400">Samagama · Vicharanashala Internship</p>
 
-        {/* <div className="mt-4 flex justify-center gap-5 text-sm text-indigo-200">
-          <Link to="/" className="hover:text-white">Overview</Link>
-          <Link to="/faq" className="hover:text-white">FAQ</Link>
-          <span className="border-b border-white font-medium text-white">Voice</span>
-          <a href="https://samagama.in/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+        {/* Top Navigation Links */}
+        {/* <div className="mt-6 flex justify-center gap-6 text-sm font-medium text-slate-400">
+          <Link to="/" className="transition-colors hover:text-white">Overview</Link>
+          <Link to="/faq" className="transition-colors hover:text-white">FAQ</Link>
+          <span className="border-b-2 border-emerald-500 text-white pb-1">Voice</span>
+          <a href="https://samagama.in/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
             samagama.in
           </a>
         </div> */}
 
-        <p className="mt-6 text-sm text-indigo-200">
-          Click the microphone, speak your question, then tap the matching FAQ.
-        </p>
+        <div className="mt-8 inline-flex overflow-hidden rounded-full border border-slate-700 bg-slate-900 text-sm font-medium">
+          <button
+            onClick={() => setLanguage('en')}
+            className={`px-6 py-2 transition-colors ${language === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}`}
+          >
+            English
+          </button>
+          <button
+            onClick={() => setLanguage('hi')}
+            className={`px-6 py-2 transition-colors ${language === 'hi' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}`}
+          >
+            हिंदी
+          </button>
+        </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-8">
+        <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
           <button
             onClick={toggleListening}
             disabled={!supported}
-            className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full shadow-lg transition disabled:opacity-40 ${
-              listening ? 'animate-pulse bg-purple-500' : 'bg-gradient-to-br from-purple-500 to-fuchsia-500'
+            className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full transition-all duration-300 disabled:opacity-50 ${
+              listening 
+                ? 'bg-emerald-600 shadow-[0_0_40px_rgba(5,150,105,0.6)] animate-pulse scale-105' 
+                : 'bg-slate-800 hover:bg-slate-700 shadow-xl border border-slate-700'
             }`}
             aria-label="Toggle microphone"
           >
             <MicIcon />
           </button>
-          <p className="mt-4 text-sm text-indigo-200">{status}</p>
+          <p className="mt-6 text-sm font-medium text-slate-400 tracking-wide">{status}</p>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-left">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-300">Your spoken script</p>
-          <div className="rounded-lg border border-white/10 bg-black/20 px-4 py-2.5 text-sm text-indigo-100">
-            {transcript || <span className="text-indigo-400/60">Your question will appear here.</span>}
+        {/* Input/Transcript Section */}
+        <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            {language === 'hi' ? 'Aapka Sawaal' : 'Your spoken script'}
+          </p>
+          <div className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-200 min-h-[3rem]">
+            {transcript || <span className="text-slate-600">{language === 'hi' ? 'Aapka sawaal yahan aayega...' : 'Your question will appear here.'}</span>}
           </div>
 
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               value={typedQuery}
               onChange={(e) => setTypedQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && runSearch(typedQuery)}
-              placeholder="Or type your question…"
-              className="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2.5 text-sm text-indigo-100 placeholder:text-indigo-400/60 focus:border-purple-400 focus:outline-none"
+              placeholder={language === 'hi' ? 'Ya apna sawaal type karein…' : 'Or type your question here…'}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
             />
             <button
               onClick={() => runSearch(typedQuery)}
-              className="shrink-0 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-[#160b2e] hover:bg-indigo-100"
+              className="shrink-0 rounded-xl bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors"
             >
-              Search
+              {language === 'hi' ? 'खोजें' : 'Search'}
             </button>
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-left">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-300">Best FAQ matches</p>
-          {searching && <p className="text-sm text-indigo-300">Searching…</p>}
+
+        {language === 'hi' && (aiReply || searching) && (
+          <div className="mt-6 rounded-2xl border border-emerald-900/50 bg-emerald-950/20 p-6 text-left shadow-lg">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              <p className="text-xs font-bold uppercase tracking-wide text-emerald-500">Yaksha-mini ka jawaab</p>
+            </div>
+            {searching ? (
+              <p className="text-sm text-slate-400">Soch raha hoon…</p>
+            ) : (
+              <p className="text-sm leading-relaxed text-slate-200">{aiReply}</p>
+            )}
+          </div>
+        )}
+
+        <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Best FAQ matches</p>
+          
+          {searching && <p className="text-sm text-emerald-500 animate-pulse">Searching knowledge base...</p>}
           {!searching && matches.length === 0 && (
-            <p className="text-sm italic text-indigo-400/70">Start speaking or typing to see matches.</p>
+            <p className="text-sm italic text-slate-600">Start speaking or typing to see matches.</p>
           )}
-          <div className="space-y-2">
+          
+          <div className="space-y-3">
             {matches.map((faq) => (
-              <Link
-                key={faq._id}
-                to={`/faq?q=${encodeURIComponent(faq.question)}`}
-                className="block rounded-lg border border-white/10 bg-black/20 px-4 py-2.5 text-sm text-indigo-100 hover:border-purple-400"
-              >
-                {faq.question}
-              </Link>
+              <div key={faq._id} className="rounded-xl border border-slate-800 bg-slate-950 overflow-hidden transition-all">
+                <button
+                  onClick={() => setOpenId(openId === faq._id ? null : faq._id)}
+                  className="flex w-full items-start justify-between gap-4 px-5 py-4 text-left text-sm font-medium text-slate-200 hover:bg-slate-800/50 transition-colors"
+                >
+                  <span className="flex-1">{faq.question}</span>
+                  <span className={`shrink-0 font-mono text-lg transition-transform ${openId === faq._id ? 'text-emerald-500' : 'text-slate-500'}`}>
+                    {openId === faq._id ? '−' : '+'}
+                  </span>
+                </button>
+                
+                {openId === faq._id && (
+                  <div className="border-t border-slate-800/50 bg-slate-900/50 px-5 py-4 text-sm text-slate-400 leading-relaxed whitespace-pre-wrap">
+                    {faq.answer ? (
+                      faq.answer
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <span>Answer available on the main FAQ page.</span>
+                        <Link 
+                          to={`/faq?q=${encodeURIComponent(faq.question)}`} 
+                          className="text-emerald-500 hover:text-emerald-400 underline font-medium"
+                        >
+                          Read full answer here
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-indigo-400">
+        {/* <p className="mt-8 text-xs text-slate-500">
           For personal cases, log in at{' '}
-          <a href="https://samagama.in/" target="_blank" rel="noopener noreferrer" className="underline">
+          <a href="https://samagama.in/" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline hover:text-white transition-colors">
             samagama.in
           </a>{' '}
           and ask Yaksha.
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -80,6 +80,9 @@ export async function promoteInsightToFaq(
 ): Promise<{ faqId: string }> {
   const insight = await ZoomInsight.findById(insightId);
   if (!insight) throw new Error('Insight not found');
+  if (insight.reviewStatus !== 'pending_review') {
+    throw new Error(`This insight was already ${insight.reviewStatus} — refresh the page.`);
+  }
 
   const category = await Category.findById(categoryId);
   if (!category) throw new Error('categoryId does not reference a real category');
@@ -94,10 +97,11 @@ export async function promoteInsightToFaq(
     ...(embedding ? { embedding } : {}),
   });
 
-  insight.reviewStatus = 'approved';
-  insight.promotedToFaqId = faq._id as mongoose.Types.ObjectId;
-  insight.reviewedBy = new mongoose.Types.ObjectId(reviewerId);
-  await insight.save();
+  await ZoomInsight.findByIdAndUpdate(insightId, {
+    reviewStatus: 'approved',
+    promotedToFaqId: faq._id,
+    reviewedBy: new mongoose.Types.ObjectId(reviewerId),
+  });
 
   return { faqId: faq._id.toString() };
 }

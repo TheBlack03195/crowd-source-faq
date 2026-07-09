@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../utils/api';
 import { Button } from '../components/ui/Button';
+import { StatusPill } from '../components/ui/StatusPill';
 
 interface ZoomStatus {
   connected: boolean;
@@ -68,71 +69,69 @@ export function AccountPage() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-lg px-4">
-      <h1 className="text-2xl font-semibold text-slate-900">Account</h1>
-      <div className="mt-4 space-y-2 text-sm text-slate-700">
-        <p>
-          <span className="font-medium">Name:</span> {user?.name}
-        </p>
-        <p>
-          <span className="font-medium">Email:</span> {user?.email}
-        </p>
-        <p>
-          <span className="font-medium">Role:</span> {user?.role}
-        </p>
-        <p>
-          <span className="font-medium">Reputation:</span> {user?.reputation}
-        </p>
+    <div className="mx-auto max-w-lg px-6 py-12">
+      <span className="font-mono text-xs uppercase tracking-[0.15em] text-forest">Profile</span>
+      <h1 className="mt-1 font-display text-3xl font-semibold text-ink">Account</h1>
+
+      <div className="mt-6 rounded-lg border border-mist bg-white p-5">
+        <dl className="grid grid-cols-2 gap-y-3 text-sm">
+          <dt className="text-ink-soft">Name</dt>
+          <dd className="text-ink">{user?.name}</dd>
+          <dt className="text-ink-soft">Email</dt>
+          <dd className="text-ink">{user?.email}</dd>
+          <dt className="text-ink-soft">Role</dt>
+          <dd><StatusPill tone="forest">{user?.role}</StatusPill></dd>
+          <dt className="text-ink-soft">Reputation</dt>
+          <dd className="font-mono text-forest">{user?.reputation} pts</dd>
+        </dl>
       </div>
 
-      <hr className="my-6 border-slate-200" />
-
-      <h2 className="text-lg font-semibold text-slate-900">Zoom integration</h2>
+      <h2 className="mt-8 font-display text-lg font-semibold text-ink">Zoom integration</h2>
 
       {zoomParam === 'connected' && (
-        <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+        <p className="mt-2 rounded-lg bg-forest-soft px-3 py-2 text-sm text-forest-dark">
           Zoom account connected successfully.
         </p>
       )}
       {zoomParam === 'error' && (
-        <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-2 rounded-lg bg-clay-soft px-3 py-2 text-sm text-clay-dark">
           Zoom connection failed. Check backend logs.
         </p>
       )}
 
-      <div className="mt-3 rounded-lg border border-slate-200 p-4">
-        <p className="text-sm text-slate-700">
-          Status:{' '}
-          <strong className={zoomStatus?.connected ? 'text-emerald-700' : 'text-slate-500'}>
+      <div className="mt-3 rounded-lg border border-mist bg-white p-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-ink-soft">Status</span>
+          <StatusPill tone={zoomStatus?.connected ? 'forest' : 'mist'}>
             {zoomStatus?.connected ? 'Connected' : 'Not connected'}
-          </strong>
-        </p>
+          </StatusPill>
+        </div>
         {!zoomStatus?.connected && (
-          <Button variant="secondary" className="mt-3" onClick={handleConnectZoom}>
+          <Button variant="secondary" className="mt-3 w-full" onClick={handleConnectZoom}>
             Connect Zoom account
           </Button>
         )}
         {zoomStatus?.lastMeeting && (
-          <p className="mt-3 text-xs text-slate-500">
-            Last sync: <strong>{zoomStatus.lastMeeting.topic}</strong> — {zoomStatus.lastMeeting.status} (
-            {zoomStatus.lastMeeting.insightsExtracted} insights extracted)
+          <p className="mt-3 border-t border-mist pt-3 text-xs text-ink-soft">
+            Last sync: <strong className="text-ink">{zoomStatus.lastMeeting.topic}</strong> —{' '}
+            {zoomStatus.lastMeeting.status} ({zoomStatus.lastMeeting.insightsExtracted} insights extracted)
           </p>
         )}
       </div>
 
-      <h3 className="mt-6 text-sm font-semibold text-slate-700">
+      <h3 className="mt-6 text-sm font-semibold text-ink">
         Manual transcript upload
-        <span className="ml-2 font-normal text-slate-400">(works without connecting Zoom)</span>
+        <span className="ml-2 font-normal text-ink-soft">(works without connecting Zoom)</span>
       </h3>
-      <form onSubmit={handleUpload} className="mt-2 space-y-2">
+      <form onSubmit={handleUpload} className="mt-2 space-y-2 rounded-lg border border-dashed border-mist-dark bg-white p-4">
         <input
           type="file"
           accept=".vtt,.txt"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="block w-full text-sm text-slate-600"
+          className="block w-full text-sm text-ink-soft file:mr-3 file:rounded-md file:border-0 file:bg-forest-soft file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-forest-dark"
         />
-        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
-        {uploadResult && <p className="text-sm text-emerald-700">{uploadResult}</p>}
+        {uploadError && <p className="text-sm text-clay">{uploadError}</p>}
+        {uploadResult && <p className="text-sm text-forest-dark">{uploadResult}</p>}
         <Button type="submit" disabled={!file || uploading}>
           {uploading ? 'Processing (this can take a minute)…' : 'Upload transcript'}
         </Button>

@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { api } from '../../utils/api';
 import type { ChatMessage } from '../../utils/types';
 
-
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export function ChatWidget() {
     try {
       const { data } = await api.post('/chat', {
         message: text,
+        language,
         history: messages.slice(-10).map((m) => ({ role: m.role, content: m.content })),
       });
       setMessages([
@@ -37,7 +38,13 @@ export function ChatWidget() {
     } catch {
       setMessages([
         ...nextHistory,
-        { role: 'assistant', content: "Sorry, I couldn't reach the assistant just now. Please try again." },
+        {
+          role: 'assistant',
+          content:
+            language === 'hi'
+              ? 'Maaf kijiye, abhi assistant tak nahi pahunch paya. Dobara try karein.'
+              : "Sorry, I couldn't reach the assistant just now. Please try again.",
+        },
       ]);
     } finally {
       setSending(false);
@@ -66,15 +73,33 @@ export function ChatWidget() {
             <p className="text-[11px] leading-tight text-slate-300">Answers from this site</p>
           </div>
         </div>
-        <button onClick={() => setOpen(false)} aria-label="Close chat" className="text-slate-300 hover:text-white">
-          ✕
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex overflow-hidden rounded-full border border-slate-600 text-[10px] font-medium">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-0.5 ${language === 'en' ? 'bg-emerald-700 text-white' : 'text-slate-300'}`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage('hi')}
+              className={`px-2 py-0.5 ${language === 'hi' ? 'bg-emerald-700 text-white' : 'text-slate-300'}`}
+            >
+              हिं
+            </button>
+          </div>
+          <button onClick={() => setOpen(false)} aria-label="Close chat" className="text-slate-300 hover:text-white">
+            ✕
+          </button>
+        </div>
       </div>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-slate-50 px-4 py-3">
         {messages.length === 0 && (
           <p className="mt-6 text-center text-xs text-slate-400">
-            Ask anything from the FAQ — e.g. "What is VINS?" or "How do I submit the NOC?"
+            {language === 'hi'
+              ? 'FAQ se kuch bhi poochein — jaise "VINS kya hai?" ya "NOC kaise submit karein?"'
+              : 'Ask anything from the FAQ — e.g. "What is VINS?" or "How do I submit the NOC?"'}
           </p>
         )}
         {messages.map((m, i) => (
@@ -104,7 +129,7 @@ export function ChatWidget() {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a question..."
+          placeholder={language === 'hi' ? 'Sawaal type karein...' : 'Type a question...'}
           className="w-full rounded-full border border-slate-300 px-4 py-2 text-sm focus:border-emerald-600 focus:outline-none"
         />
         <button

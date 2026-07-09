@@ -5,7 +5,7 @@ import { CommunityPost } from '../models/CommunityPost.js';
 import { SupportRequest } from '../models/SupportRequest.js';
 import { ZoomMeeting } from '../models/ZoomMeeting.js';
 import { PipelineResult } from '../models/PipelineResult.js';
-
+import { getAppSettings } from '../models/AppSetting.js';
 
 export async function getDashboardStats(_req: Request, res: Response) {
   const [
@@ -18,6 +18,7 @@ export async function getDashboardStats(_req: Request, res: Response) {
     goldenTickets,
     failedZoomMeetings,
     recentPipelineActivity,
+    appSettings,
   ] = await Promise.all([
     User.countDocuments({ isDeleted: false }),
     FAQ.countDocuments(),
@@ -28,6 +29,7 @@ export async function getDashboardStats(_req: Request, res: Response) {
     SupportRequest.countDocuments({ isGolden: true, status: { $in: ['open', 'in_progress'] } }),
     ZoomMeeting.countDocuments({ status: 'failed' }),
     PipelineResult.find().sort({ checkedAt: -1 }).limit(10),
+    getAppSettings(),
   ]);
 
   res.json({
@@ -40,6 +42,7 @@ export async function getDashboardStats(_req: Request, res: Response) {
     goldenTickets,
     failedZoomMeetings,
     recentPipelineActivity,
+    duplicatesPrevented: appSettings.duplicatesPreventedCount,
   });
 }
 

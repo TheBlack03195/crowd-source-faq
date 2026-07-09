@@ -1,8 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
+import { StatusPill } from '../components/ui/StatusPill';
+import { LoadingRow } from '../components/ui/Spinner';
 import type { CommunityPost, PostAuthor } from '../utils/types';
 
 function authorName(a: PostAuthor | string) {
@@ -10,6 +12,70 @@ function authorName(a: PostAuthor | string) {
 }
 function authorId(a: PostAuthor | string) {
   return typeof a === 'string' ? a : a._id;
+}
+
+const statusTone: Record<string, 'forest' | 'mist' | 'gold'> = {
+  resolved: 'forest',
+  closed: 'mist',
+  open: 'gold',
+};
+
+function VoteControl({
+  score,
+  onUp,
+  onDown,
+  userVote = 0,
+  size = 'md',
+}: {
+  score: number;
+  onUp: () => void;
+  onDown: () => void;
+  userVote?: 1 | -1 | 0;
+  size?: 'sm' | 'md';
+}) {
+  const btnSize = size === 'sm' ? 'h-5 w-5' : 'h-6 w-6';
+  const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4';
+  const textSize = size === 'sm' ? 'text-xs' : 'text-sm';
+
+  return (
+    <div className="flex items-center gap-1 rounded-full bg-ink/90 px-1.5 py-1 shadow-sm">
+      <button
+        onClick={onUp}
+        aria-label="Upvote"
+        className={`flex ${btnSize} items-center justify-center rounded-full transition-colors ${
+          userVote === 1
+            ? 'bg-emerald-500/20 text-emerald-400'
+            : 'text-white/70 hover:bg-white/10 hover:text-emerald-400'
+        }`}
+      >
+        <svg className={iconSize} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+
+      <span
+        className={`min-w-[1.25rem] text-center ${textSize} font-bold tabular-nums ${
+          userVote === 1 ? 'text-emerald-400' : userVote === -1 ? 'text-red-400' : 'text-white'
+        }`}
+      >
+        {score}
+      </span>
+
+      <button
+        onClick={onDown}
+        aria-label="Downvote"
+        className={`flex ${btnSize} items-center justify-center rounded-full transition-colors ${
+          userVote === -1
+            ? 'bg-red-500/20 text-red-400'
+            : 'text-white/70 hover:bg-white/10 hover:text-red-400'
+        }`}
+      >
+        <svg className={iconSize} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
+  );
 }
 
 export function PostDetailPage() {
@@ -60,112 +126,104 @@ export function PostDetailPage() {
   async function handleReportPost() {
     if (!confirm('Report this post to moderators?')) return;
     await api.post(`/community/posts/${id}/report`);
-    alert('Reported. A moderator will take a look.');
+    load();
   }
 
   async function handleReportComment(commentId: string) {
     if (!confirm('Report this comment to moderators?')) return;
     await api.post(`/community/posts/${id}/comments/${commentId}/report`);
-    alert('Reported. A moderator will take a look.');
+    load();
   }
 
-  if (loading) return <p className="mx-auto mt-10 max-w-3xl px-4 text-sm text-slate-500">Loading…</p>;
-  if (!post) return <p className="mx-auto mt-10 max-w-3xl px-4 text-sm text-slate-500">Post not found.</p>;
+  if (loading) return <div className="mx-auto max-w-3xl px-6 py-12"><LoadingRow /></div>;
+  if (!post)
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-12 text-sm text-ink-soft">
+        Post not found. <Link to="/community" className="text-forest underline">Back to community</Link>
+      </div>
+    );
 
   const isPostAuthor = isAuthenticated && authorId(post.authorId) === user?.id;
+  const visibleComments = post.comments.filter((c) => !c.isDeleted);
 
   return (
-    <div className="mx-auto mt-10 max-w-3xl px-4">
-      <div className="rounded-lg border border-slate-200 p-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-slate-900">{post.title}</h1>
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-              post.status === 'resolved'
-                ? 'bg-emerald-100 text-emerald-700'
-                : post.status === 'closed'
-                  ? 'bg-slate-200 text-slate-600'
-                  : 'bg-amber-100 text-amber-700'
-            }`}
-          >
-            {post.status}
-          </span>
+    <div className="mx-auto max-w-3xl px-6 py-12">
+      <Link to="/community" className="text-xs text-ink-soft hover:text-forest">← Back to community</Link>
+
+      <div className="mt-3 rounded-xl border border-mist bg-white p-6 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="font-display text-2xl font-semibold text-ink">{post.title}</h1>
+          <StatusPill tone={statusTone[post.status] ?? 'mist'}>{post.status}</StatusPill>
         </div>
-        <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">{post.body}</p>
-        <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
-          <span>by {authorName(post.authorId)}</span>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">{post.body}</p>
+
+        <div className="mt-5 flex items-center gap-3 border-t border-mist pt-4 text-xs text-ink-soft">
           {isAuthenticated && (
-            <div className="flex gap-1">
-              <button onClick={() => handleVotePost(1)} className="rounded border px-2 py-0.5 hover:bg-slate-50">
-                ▲
-              </button>
-              <span>{post.upvotes}</span>
-              <button onClick={() => handleVotePost(-1)} className="rounded border px-2 py-0.5 hover:bg-slate-50">
-                ▼
-              </button>
-            </div>
+            <VoteControl
+              score={post.upvotes}
+              userVote={(post as any).userVote ?? 0}
+              onUp={() => handleVotePost(1)}
+              onDown={() => handleVotePost(-1)}
+            />
           )}
+
+          <div className="flex items-center gap-1.5 rounded-full bg-ink/90 px-3 py-1.5 text-sm font-semibold text-white shadow-sm">
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="tabular-nums">{visibleComments.length}</span>
+          </div>
+
+          <span className="ml-auto">by {authorName(post.authorId)}</span>
+
           {isAuthenticated && !isPostAuthor && (
-            <button onClick={handleReportPost} className="text-slate-400 hover:text-red-600 hover:underline">
+            <button onClick={handleReportPost} className="text-ink-soft/70 hover:text-clay">
               ⚑ Report
             </button>
           )}
         </div>
       </div>
 
-      <h2 className="mt-6 mb-3 text-sm font-semibold text-slate-700">
-        {post.comments.filter((c) => !c.isDeleted).length} comments
+      <h2 className="mb-3 mt-8 font-mono text-xs font-medium uppercase tracking-[0.15em] text-ink-soft">
+        {visibleComments.length} {visibleComments.length === 1 ? 'reply' : 'replies'}
       </h2>
 
       <div className="space-y-3">
-        {post.comments
-          .filter((c) => !c.isDeleted)
-          .map((c) => (
-            <div
-              key={c._id}
-              className={`rounded-lg border p-3 ${
-                c.isAccepted ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200'
-              }`}
-            >
-              <p className="text-sm text-slate-800">{c.content}</p>
-              <div className="mt-2 flex items-center gap-3 text-xs text-slate-500">
-                <span>
-                  {authorName(c.authorId)} {c.isVerified && <span className="text-emerald-600">✓ expert</span>}
-                </span>
-                {isAuthenticated && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => handleVoteComment(c._id, 1)}
-                      className="rounded border px-1.5 py-0.5 hover:bg-slate-50"
-                    >
-                      ▲
-                    </button>
-                    <span>{c.upvotes - c.downvotes}</span>
-                    <button
-                      onClick={() => handleVoteComment(c._id, -1)}
-                      className="rounded border px-1.5 py-0.5 hover:bg-slate-50"
-                    >
-                      ▼
-                    </button>
-                  </div>
-                )}
-                {isPostAuthor && !c.isAccepted && post.status !== 'closed' && (
-                  <button onClick={() => handleAccept(c._id)} className="text-emerald-700 hover:underline">
-                    Accept answer
-                  </button>
-                )}
-                {c.isAccepted && <span className="font-medium text-emerald-700">✓ Accepted</span>}
-                {isAuthenticated && authorId(c.authorId) !== user?.id && (
-                  <button
-                    onClick={() => handleReportComment(c._id)}
-                    className="text-slate-400 hover:text-red-600 hover:underline"
-                  >
-                    {c.isReported ? 'Reported' : '⚑ Report'}
-                  </button>
-                )}
-              </div>
+        {visibleComments.map((c) => (
+          <div
+            key={c._id}
+            className={`rounded-xl border p-4 ${
+              c.isAccepted ? 'border-forest/30 bg-forest-soft/40' : 'border-mist bg-white'
+            }`}
+          >
+            <p className="text-sm text-ink">{c.content}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
+              <span>
+                {authorName(c.authorId)}{' '}
+                {c.isVerified && <span className="font-mono uppercase tracking-wide text-forest">✓ expert</span>}
+              </span>
+              {isAuthenticated && (
+                <VoteControl
+                  size="sm"
+                  score={c.upvotes - c.downvotes}
+                  onUp={() => handleVoteComment(c._id, 1)}
+                  onDown={() => handleVoteComment(c._id, -1)}
+                />
+              )}
+              {isPostAuthor && !c.isAccepted && post.status !== 'closed' && (
+                <button onClick={() => handleAccept(c._id)} className="font-medium text-forest hover:underline">
+                  Accept answer
+                </button>
+              )}
+              {c.isAccepted && <StatusPill tone="forest">✓ Accepted</StatusPill>}
+              {isAuthenticated && authorId(c.authorId) !== user?.id && (
+                <button onClick={() => handleReportComment(c._id)} className="text-ink-soft/70 hover:text-clay">
+                  ⚑ Report
+                </button>
+              )}
             </div>
-          ))}
+          </div>
+        ))}
       </div>
 
       {isAuthenticated ? (
@@ -177,14 +235,16 @@ export function PostDetailPage() {
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Write a reply…"
               rows={3}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
+              className="w-full rounded-lg border border-mist-dark px-3 py-2 text-sm focus:border-forest focus:outline-none"
             />
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-clay">{error}</p>}
             <Button type="submit">Reply</Button>
           </form>
         )
       ) : (
-        <p className="mt-6 text-sm text-slate-500">Log in to reply or vote.</p>
+        <p className="mt-6 text-sm text-ink-soft">
+          <Link to="/login" className="text-forest underline">Log in</Link> to reply or vote.
+        </p>
       )}
     </div>
   );

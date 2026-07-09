@@ -63,17 +63,19 @@ export async function votePost(req: Request, res: Response) {
   const userId = req.user!._id;
   const existing = post.votedBy.find((v) => v.userId.toString() === userId.toString());
 
+  let resultingUserVote: 1 | -1 | 0;
+
   if (existing && existing.direction === direction) {
-    
     post.votedBy = post.votedBy.filter((v) => v.userId.toString() !== userId.toString());
     post.upvotes -= direction;
+    resultingUserVote = 0;
     if (direction === 1) {
       await awardReputation(post.authorId, 'post_upvote_removed', 'CommunityPost', post._id);
     }
   } else if (existing) {
-    // Flip direction
     existing.direction = direction;
     post.upvotes += direction * 2;
+    resultingUserVote = direction;
     if (direction === 1) {
       await awardReputation(post.authorId, 'post_upvoted', 'CommunityPost', post._id);
     } else {
@@ -82,13 +84,14 @@ export async function votePost(req: Request, res: Response) {
   } else {
     post.votedBy.push({ userId, direction });
     post.upvotes += direction;
+    resultingUserVote = direction;
     if (direction === 1) {
       await awardReputation(post.authorId, 'post_upvoted', 'CommunityPost', post._id);
     }
   }
 
   await post.save();
-  res.json({ upvotes: post.upvotes });
+  res.json({ upvotes: post.upvotes, userVote: resultingUserVote });
 }
 
 export async function resolvePost(req: Request, res: Response) {
