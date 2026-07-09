@@ -1,6 +1,16 @@
 import type { Request, Response } from 'express';
 import { CommunityPost } from '../models/CommunityPost.js';
 
+function withUserVote(post: any, userId?: string) {
+  const obj = typeof post.toObject === 'function' ? post.toObject() : post;
+  const voted = userId
+    ? obj.votedBy?.find((v: any) => v.userId.toString() === userId.toString())
+    : undefined;
+  obj.userVote = voted ? voted.direction : 0;
+  delete obj.votedBy;
+  return obj;
+}
+
 export async function listPosts(req: Request, res: Response) {
   const { categoryId, batchId, status, isReported, page = '1', limit = '20' } = req.query as Record<
     string,
@@ -20,13 +30,15 @@ export async function listPosts(req: Request, res: Response) {
       .sort({ createdAt: -1 })
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .select('-comments') 
       .populate('authorId', 'name reputation')
       .populate('categoryId', 'name slug'),
     CommunityPost.countDocuments(filter),
   ]);
 
-  res.json({ items, total, page: pageNum, limit: limitNum });
+  const userId = req.user?._id?.toString();
+  const itemsWithVote = items.map((post) => withUserVote(post, userId));
+
+  res.json({ items: itemsWithVote, total, page: pageNum, limit: limitNum });
 }
 
 export async function getPost(req: Request, res: Response) {
@@ -36,7 +48,9 @@ export async function getPost(req: Request, res: Response) {
     .populate('comments.authorId', 'name reputation');
 
   if (!post) return res.status(404).json({ error: 'Post not found' });
-  res.json({ post });
+
+  const userId = req.user?._id?.toString();
+  res.json({ post: withUserVote(post, userId) });
 }
 
 

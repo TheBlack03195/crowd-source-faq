@@ -1,10 +1,127 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-ink: #1c2321;
+  --color-ink-soft: #4a534f;
+  --color-paper: #f5f6f0;
+  --color-paper-raised: #ffffff;
+  --color-mist: #e3e6dd;
+  --color-mist-dark: #cdd1c4;
+
+  --color-forest: #1f5f5b;
+  --color-forest-dark: #163f3c;
+  --color-forest-soft: #e6efee;
+
+  --color-gold: #d89b2c;
+  --color-gold-dark: #a97615;
+  --color-gold-soft: #faf1de;
+
+  --color-clay: #b54a2a;
+  --color-clay-dark: #8f3a20;
+  --color-clay-soft: #f8e9e2;
+}
+
 :root {
   color-scheme: light;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.spine {
+  border-left: 3px solid var(--color-mist-dark);
+}
+.spine-gold {
+  border-left: 3px solid var(--color-gold);
+}
+.spine-forest {
+  border-left: 3px solid var(--color-forest);
+}
+.spine-clay {
+  border-left: 3px solid var(--color-clay);
+}
+
+/* ── Ticket stub — signature moment, Golden Ticket page only ───── */
+.ticket-stub {
+  position: relative;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-mist-dark);
+  border-radius: 12px;
+}
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: var(--color-paper);
+  border: 1px solid var(--color-mist-dark);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.ticket-stub::before {
+  left: -11px;
+}
+.ticket-stub::after {
+  right: -11px;
+}
+.ticket-perforation {
+  border-left: 2px dashed var(--color-mist-dark);
+}
+
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.35s ease-out both;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-mist-dark);
+  border-radius: 8px;
 }

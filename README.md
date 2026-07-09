@@ -9,7 +9,12 @@ get a dashboard to review, moderate, and keep content fresh.
 ## What is it
 
 - **Public FAQ** with keyword + semantic (hybrid) search, a floating
-  "Yaksha-mini" AI chat widget, and a voice-search mode.
+  "Yaksha-mini" AI chat widget, and a voice-search mode — both the chat
+  widget and voice search support **English and Hindi**.
+- **Live duplicate-question detection** — as a student types a new
+  community post title, the system checks it against the existing FAQ
+  and posts in real time and surfaces close matches before they post,
+  instead of only letting them search afterward.
 - **Community Q&A** — post questions, answer, upvote, accept answers,
   earn reputation, climb the leaderboard.
 - **Support desk** — raise a ticket, get replies from staff, escalate
@@ -19,7 +24,8 @@ get a dashboard to review, moderate, and keep content fresh.
   extracts Q&A pairs from uploaded/ingested Zoom meeting transcripts.
 - **Admin dashboard** — moderation (posts, comments, users), FAQ
   review queue, support ticket queue, Zoom ingestion health, feature
-  flags, and basic Prometheus metrics.
+  flags, a running count of duplicates prevented, and basic Prometheus
+  metrics.
 
 See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the detailed,
 phase-by-phase build history and a list of known gaps/limitations.
@@ -51,8 +57,10 @@ crowd-source-faq/
 │   │   ├── server.ts             # app setup, middleware chain, route mounting
 │   │   ├── config/
 │   │   │   └── db.ts             # MongoDB connection (cached/lazy)
-│   │   ├── models/                # Mongoose schemas (User, FAQ, CommunityPost, SupportRequest, ...)
+│   │   ├── models/                # Mongoose schemas (User, FAQ, CommunityPost, SupportRequest, AppSetting, ...)
 │   │   ├── controllers/            # request handlers, one file per resource/feature
+│   │   │                            #   incl. chatWidgetController.ts (bilingual RAG chat)
+│   │   │                            #   and duplicateCheckController.ts (live duplicate detection)
 │   │   ├── routes/                 # Express routers, one file per resource — mounted in server.ts
 │   │   ├── middleware/              # auth (protect/authorize), admin guard, metrics
 │   │   ├── utils/                    # AI clients, search/RRF, crypto, rate limiting, sanitization, etc.
@@ -66,10 +74,12 @@ crowd-source-faq/
 │       │   ├── main.tsx              # entry point
 │       │   ├── App.tsx                # route table
 │       │   ├── pages/                  # one component per public/user route
+│       │   │                            #   incl. VoiceFaqPage.tsx (bilingual voice search)
+│       │   │                            #   and CommunityPage.tsx (live duplicate-detector form)
 │       │   ├── admin/
 │       │   │   ├── pages/                # one component per /admin/* route
 │       │   │   └── components/            # AdminLayout (sidebar), AdminRoute (role guard), shared widgets
-│       │   ├── components/ui/              # shared UI: Navbar, Button, SearchBar, ChatWidget, ProtectedRoute
+│       │   ├── components/ui/              # shared UI: Navbar, Button, SearchBar, ChatWidget (bilingual), ProtectedRoute
 │       │   ├── hooks/                        # useAuth (auth context)
 │       │   └── utils/                         # api.ts (axios instance), types.ts (shared TS types)
 │       └── public/                              # static assets (favicon, etc.)
@@ -119,10 +129,11 @@ Add to `apps/backend/.env.local`:
 ```
 GEMINI_API_KEY=your-gemini-api-key-here
 ```
-That's the only required addition — powers the chat widget, community
-auto-answer pipeline, and FAQ audit pipeline. Full list of every env
-var (Zoom OAuth, scheduler cron settings, freshness thresholds, etc.)
-is documented inline in `apps/backend/.env.example`.
+That's the only required addition — powers the chat widget (English +
+Hindi), voice search's Hindi mode, the community auto-answer pipeline,
+and the FAQ audit pipeline. Full list of every env var (Zoom OAuth,
+scheduler cron settings, freshness thresholds, etc.) is documented
+inline in `apps/backend/.env.example`.
 
 ## Available scripts
 
@@ -148,28 +159,56 @@ All backend routes are mounted under `/api`. High-level groups:
 | `/api/auth` | register, login, `/me`, soft-delete account |
 | `/api/faq`, `/api/public` | FAQ CRUD (admin/mod write), public browse |
 | `/api/search` | hybrid keyword + vector search, autocomplete |
-| `/api/chat` | AI chat widget (RAG over the FAQ set) |
-| `/api/community` | posts, comments, voting, bookmarks, reporting |
+| `/api/chat` | AI chat widget — RAG over the FAQ set, English + Hindi (`language: 'en' \| 'hi'`) |
+| `/api/community` | posts, comments, voting, bookmarks, reporting, **live duplicate-question check** |
 | `/api/reputation` | reputation log, leaderboard |
 | `/api/support` | ticket create/list/reply/status, Golden Ticket, support categories |
 | `/api/freshness` | flag/vote/review-queue for stale FAQs |
 | `/api/zoom` | OAuth connect, webhook receiver, manual transcript upload |
 | `/api/knowledge` | transcript knowledge + Zoom insight review (admin) |
 | `/api/moderation` | ban/suspend/warn (admin) |
-| `/api/admin` | dashboard stats, user management, auto-answer + FAQ-audit triggers |
+| `/api/admin` | dashboard stats (incl. duplicates prevented), user management, auto-answer + FAQ-audit triggers |
 | `/api/app-settings`, `/api/feature-flags` | admin-configurable settings/toggles |
 | `/api/metrics`, `/api/health` | Prometheus metrics, health check |
+
+### Notable endpoints added for the two newest features
+
+| Method + path | Auth | What it does |
+|---|---|---|
+| `POST /api/chat` | public, rate-limited | Body: `{ message, language?: 'en'\|'hi', history? }`. Searches the approved FAQ set for context, asks Gemini to answer strictly from that context, in the requested language. |
+| `POST /api/community/posts/check-duplicate` | login | Body: `{ title }`. Returns up to 4 close matches from FAQs + existing posts, fired as the user types (debounced client-side). |
+| `POST /api/community/posts/duplicate-averted` | login | Fired when a user clicks a suggested match instead of continuing to post; increments the admin dashboard's "duplicates prevented" counter. |
 
 Every route file under `apps/backend/routes/` is a short, readable list
 of `router.get/post/patch/delete(...)` lines — that's the fastest way
 to see exactly what's exposed and which middleware guards it.
 
+## Feature spotlight: the two newest additions
+
+**Live Duplicate-Question Detector** — most FAQ/forum projects only let
+you search *after* you've already started writing a post. Here, typing
+a title (5+ characters) fires a debounced check against both the FAQ
+and existing community posts; if something close already exists, it's
+suggested inline with a link, before the user finishes posting. Reuses
+the same `$text` search infrastructure the FAQ/community search already
+had — no new AI call, no new schema beyond a single counter field.
+
+**Bilingual (English/Hindi) Chat + Voice** — both the FAQ chat widget
+and the voice-search page have an EN/हिंदी toggle. FAQ content itself
+stays in English (most cohort questions retain English nouns like
+"NOC"/"hostel"/"stipend" even when asked in Hindi, and a trending-FAQ
+fallback covers the rest), and Gemini is instructed to answer in
+Devanagari script while still grounding the answer in that English
+context — a deliberately lightweight approach with no separate
+translation pipeline or duplicated Hindi content to maintain.
+
 ## Status
 
-Feature-complete across 8 build phases (see `docs/CHANGELOG.md` for
-what shipped in each). Type-checks and builds are clean on both apps,
-and a unit test suite passes, but **this has not yet had a full
-production-readiness pass** — see the "Known production-readiness
+Feature-complete across 8 build phases plus two follow-up features
+(duplicate detection, bilingual chat/voice) — see `docs/CHANGELOG.md`
+for the full phase-by-phase history. Type-checks and builds are clean
+on both apps, and a unit test suite passes, but **this has not yet had
+a full production-readiness pass** — see the "Known production-readiness
 gaps" section at the bottom of `docs/CHANGELOG.md` before deploying
 publicly (secrets/`.gitignore`, a Zoom webhook signature bug, missing
 404/error-boundary pages, thin error handling, no mobile nav, and no

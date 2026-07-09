@@ -1,0 +1,280 @@
+1. About the internship §
+1.1 What is the Vicharanashala internship? §
+A two-month, full-time engagement at the Vicharanashala Lab, a research lab at IIT Ropar. You will work on a real open-source project under a mentor, after a short training phase tailored to where you already are. The internship is free — we do not charge, and the work is real.
+
+1.2 What is VINS? §
+VINS is the Vicharanashala Internship — an online programme open to anyone who clears our interview. The work is real open-source contribution under a mentor, the certificate is from the Vicharanashala Lab for Education Design at IIT Ropar, and the programme itself is free (we charge nothing). There is no stipend.
+
+If you are seeing a yellow VINS panel on your result page, you are selected.
+
+1.3 What are the phases of VINS, and what do the badges mean? §
+VINS is structured as four phases. Each one is marked by a badge — a small token of where you are in the journey.
+
+🥉 Bronze (Phase 1) — a short training period at the start, planned
+around what you already know. If you arrive already comfortable with the basics, you may skip Bronze and go straight on to the project. Bronze culminates in a CSFAQ project submission — you submit a GitHub link (repo or PR) along with product documentation and a project report. See §10.15 for details.
+
+🥈 Silver (Phase 2) — the main work. You contribute to a real
+open-source project under a Vicharanashala mentor. Finishing Bronze and Silver completes your internship and earns the certificate.
+
+🥇 Gold (Phase 3) — a recognition awarded during Silver if your
+contribution stands on its own as a meaningful feature, not just a small fix.
+
+🏆 Platinum (Phase 4) — a standing invitation to come back and visit
+the lab — a short trip — any time during the year after your internship ends. We help with travel through a small visit stipend.
+
+Most interns finish at Bronze + Silver, and that is exactly what the certificate is for. Gold and Platinum are extras you can pick up if your work makes the case for them. Either way, you walk away with a real open-source contribution to your name and a mentor who knows you well.
+
+1.4 Who is the internship for? Are alumni eligible? §
+The internship is for currently-enrolled students at any college or university — undergraduate, postgraduate, or doctoral. The NOC requirement is the practical reflection of this: we ask for institutional consent that you can commit your time to this internship.
+
+Candidates who have already graduated and are not currently enrolled in any programme are not eligible for this cycle. If you re-enrol later (higher studies, etc.), you are very welcome to apply again in a future cycle.
+
+1.5 Is this the same as IIT Ropar's official Summer Research Internship? §
+No. Summership 2026 is a VLED Lab initiative. The certificate is issued by the Vicharanashala Lab for Education Design, not centrally by the institute. IIT Ropar runs a separate institutional summer research internship through its own office. Do not represent Summership 2026 as equivalent to that programme.
+
+1.6 I have to attend my class tomorrow/today/some day — can I take leave? §
+Leave is not permitted. If you are also attending classes or exams, you will be relieved from the internship immediately and will need to join the next batch when it starts.
+
+2. Timing and dates §
+2.1 When can I start? §
+You can start any time in 2026 — VINS is flexible on the start date — but there are two things you must hold in mind together, and one strong recommendation.
+
+The hard rule. Your internship must finish by 31 December 2026. That date is non-negotiable. Whatever start you pick, your end date (your start + 2 months, with up to 1 month grace) must land on or before 31 December 2026. So while there is no last date to opt in, there is absolutely a last date to finish.
+
+The strong recommendation: start as soon as possible. The earlier you join, the more of the May–July main cohort you catch — and three things make starting earlier materially better than starting later:
+
+Cohort networking. The batch goes through Bronze together —
+peer discussions, parallel problem-solving, and lasting connections happen during this window. Later in the year the cohort disperses and late starters are largely solo.
+
+TA support is concentrated in May–July. TAs are full-time
+during this window. After this they return to their own college work and bandwidth is materially thinner.
+
+Training rolls out with the cohort, not piecemeal — you get
+the material with the discussion around it, not as a static document.
+
+If starting now is genuinely impossible for you (exams, other unavoidable commitments), you can begin later and still complete and earn the certificate — but be honest with yourself: the cohort effect and support will be lighter, and the December cap means a late start leaves no room for slippage.
+
+2.2 How long is the internship? §
+Two months from your chosen start date, with an optional one-month grace period if you need it. End must land on or before 31 December 2026.
+
+2.3 Can I start in July, August or later if I have exams now? §
+Yes — but only if your exams genuinely make an earlier start impossible. Wait until your exams are done, then opt in and start. Do not attempt to juggle this internship with ongoing exams. Make sure your chosen start date plus 2 months (or 3 with grace) lands on or before 31 December 2026.
+
+2.4 Can I start with the cohort and take a relaxation during my exam window? §
+No. This is not an arrangement we offer.
+
+VINS is a full-attention internship — six to ten hours a day, sometimes more. Splitting that with college exams damages both sides: the project loses momentum, the exams suffer, and the lab invests in someone who can only half-engage. We have seen this fail enough times to be firm.
+
+If your exams fall inside the cohort duration, defer your start to after your exams end, opt in then, and run the internship at full attention. The certificate and project pathway are the same.
+
+A note on consequences. If we later learn that a candidate was sitting college exams during their internship period, we reserve the right to terminate the internship or withhold the certificate at any time — including after the internship has otherwise been completed.
+
+2.5 Can I take leave or get an exemption during the internship for an exam scheduled in June? §
+The attendance rule is firm — the 55-day continuous window is a non-negotiable part of the internship, and we cannot offer an exemption for an exam during this period. The policy exists because split attention genuinely damages both your exam preparation and your internship work.
+
+2.6 Are orientation session recordings shared with interns, and can project or group assignments be changed after watching them? §
+Recordings of the sessions will not be provided. However, we may provide access to an abridged version of a talk or session if we consider it important. We do not guarantee this for every session.
+
+3. NOC (No Objection Certificate) §
+3.1 What dates do I put on the NOC? §
+Default: your chosen start date → your start + 2 months
+(with up to 1 month grace), ensuring the end date is on or before 31 December 2026. Pick the earliest start date you can realistically make — the May–July summer window is the main cohort.
+
+If the NOC will be signed on a specific later date, pick a start
+date after the signature date.
+
+3.2 Who can sign the NOC? §
+Any authorised signatory at your college: HOD, Acting HOD (during holidays), Principal, Dean, Director, or Training & Placement Officer. For dual-degree students, either institution can sign — pick whichever is easier. For IITM BS Online Degree (standalone) students, any officer from the BS office can sign.
+
+3.3 When do I submit the NOC? Is the deadline hard? §
+There is no specific calendar cut-off date by which the NOC must be uploaded — but your internship cannot formally begin until your official institutional NOC has been uploaded and validated by us. So submit your signed NOC as early as possible and join the current summer cohort.
+
+If you are on VINS you can technically upload your NOC and start later in the year, but we strongly do not recommend it — by then you will not get to network properly with the rest of the cohort, and the cohort + TA support that make this internship genuinely good are concentrated during the summer window. Submit early, start as soon as possible, and you will get the full version of the experience.
+
+3.4 What format should I use? Do I need to design it myself? §
+No — we provide a printable NOC format. Once your result is out and you log in to samagama.in, you will see a Download blank NOC button on your dashboard. Take a printout, get it physically signed and stamped by your authorised signatory, scan it, and upload the signed PDF using the Upload signed NOC button (also on the dashboard). You do not need to draft anything yourself, and you do not need college letterhead — the format we provide is the canonical layout.
+
+3.5 What if my college / Program Chair gives me an NOC in their own format? §
+A college's own NOC format is acceptable, as long as all of the required entries are present on it:
+
+The signing authority's (HOD / Dean / Program Chair / Principal) handwritten signature — this is the most important item
+The signing authority's name, designation, official email address, and phone number (we cross-check with that person to verify the signature is genuine)
+Your full name and the internship period (start and end dates)
+Your signature
+If your college's format does not include a place for your signature, sign clearly and prominently anywhere on the document before uploading. With those entries present, you do not need to switch to our printable format. An NOC missing any of them is incomplete and will be returned for correction.
+
+3.6 Does it need to be signed by hand? §
+Yes. Three things are required, all on the NOC format we provide:
+
+The authorised signatory's handwritten signature
+The institutional rubber stamp / seal applied in the designated area
+The signatory's email address filled in the designated field — we automatically cross-check with that person to verify the signature is genuine
+Digital signatures are not accepted. The only path is a physically-signed printout uploaded by you from the dashboard (see §3.8).
+
+3.7 Can my HOD email the NOC instead of uploading it? §
+No. Your NOC must be uploaded by you, the student, from your dashboard — we no longer accept NOCs sent by email.
+
+We previously offered an email-forward path where your HOD emailed the NOC to us. That option has been retired. NOCs emailed to us — whether by you or by your HOD — will not be processed.
+
+The only accepted way to submit your NOC is to download the format, get it signed by the appropriate authority at your institution, and upload the signed PDF yourself from your dashboard (see §3.8). If your college gives you a signed NOC in their own format, that is fine (see §3.5) — you still upload it yourself as a PDF.
+
+3.8 How do I download and upload the NOC? §
+Both happen on your dashboard at samagama.in once your result is out. You will see a NOC section with two buttons in three places (all backed by the same endpoints — use whichever is convenient):
+
+A compact pill in the dark header bar at the top of every screen.
+A standalone NOC card on the dashboard, between the Results card and
+the Talk-to-Yaksha button.
+
+A NOC section at the bottom of your full Result message itself.
+The two buttons:
+
+Download blank NOC — saves the printable NOC format PDF.
+Upload signed NOC (PDF) — opens a file picker; the file must be a
+PDF of at most 1 MB. Confirmation appears on the same card once the upload is received.
+
+The chat surface no longer carries any NOC affordance — please use the dashboard buttons. If you can't see the buttons, make sure you are logged in as the email that received the result, and that your result has been released.
+
+3.9 What if my NOC is not formally verified? §
+NOC verification takes time — typically anywhere between an hour and one full working day from the moment you upload.
+
+Your offer letter is issued automatically once your signed institutional NOC is uploaded and validated — there is no faster route. (The earlier self-declaration / provisional-offer option was retired on 2026-05-27 and is no longer accepted.) Please upload your signed NOC as early as you can so your start is not delayed.
+
+3.10 My online course (Masai, NPTEL, Coursera, etc.) won't issue an NOC. What do I do? §
+The internship is open only to candidates currently enrolled in a full-time degree programme at a recognised college or university. Online-only courses — Masai Institute, NPTEL / MOOC enrolments, Coursera, Udacity, bootcamps, and similar — do not by themselves make a candidate eligible.
+
+If you are concurrently enrolled in a full-time degree programme alongside the online course, please obtain a No Due / No Objection certificate from that college (department, Dean's office, or Principal) and upload it via the NOC upload flow on your dashboard.
+
+If your only current academic engagement is the online course and you are not concurrently enrolled in a full-time degree programme, the internship is not open to you in this cycle. We would warmly welcome you to apply again in a future cycle once you are enrolled in a full-time programme.
+
+3.11 My HOD/college official wants written confirmation before signing my NOC. What do I show them? §
+Your selection is already confirmed the moment your yellow VINS (or green VISE) result panel appears on your samagama.in dashboard — that is the official confirmation of your selection, and it is what your HOD should sign your NOC on the basis of.
+
+There is no separate written confirmation letter or other proof-of-selection document issued before the NOC step — and none can be sent on request. (The selection-confirmation letter and the self-declaration / provisional-offer route have both been discontinued.) Your offer letter is issued only after your signed NOC is uploaded and validated, so it is not available beforehand.
+
+If your college will not sign without something in hand, show them your VINS result panel on the dashboard as evidence of selection — that is the confirmation we provide.
+
+3.12 Can Prof. Sudarshan Iyengar or a faculty member from IIT Ropar sign my NOC for the internship? §
+Your NOC must be signed by an authorised signatory at the institution where you are enrolled as a student — such as your HOD, Dean, Principal, or Training & Placement Officer. Sudarshan Iyengar is a faculty member at IIT Ropar and is not the authorised signatory for the IIT Ropar/Masai online AIML programme. He cannot sign your NOC in a personal capacity. Regarding eligibility: the internship is open to candidates currently enrolled in a UG/PG/Diploma programme at a recognised college or university. An online-only certification course (even if offered jointly with an IIT) does not meet that requirement on its own. If you are concurrently enrolled in a full-time degree programme elsewhere, please obtain the NOC from the authorised signatory at that institution. If your only current academic enrolment is the IIT Ropar/Masai online programme, you are not eligible for this internship cycle. Please clarify your current enrolment status and we will guide you accordingly.
+
+4. Selection, offer letter, and certificate §
+4.1 How do I know I am selected? §
+If you can see your yellow VINS result panel on samagama.in, you are selected. There is no separate selection step or confirmation email.
+
+4.2 How do I opt into VINS? §
+Tell Yaksha in the chat: "I want to take up the online internship without stipend." Yaksha will confirm. Opting in is the selection — no separate confirmation email is sent at that stage.
+
+4.3 When do I get the offer letter? §
+Your offer letter is issued automatically once you upload your signed institutional NOC (and have confirmed your start and end dates on the dashboard, see §4.5) and we validate it — typically within an hour to one full working day of upload.
+
+There is a single offer letter on Vicharanashala letterhead; once your NOC is validated it is the operative offer for your college / employer records. (The earlier self-declaration / provisional-offer "fast path" was retired on 2026-05-27 and is no longer available — a signed institutional NOC is now the only way the offer letter is issued.)
+
+The offer letter lives on your dashboard at samagama.in, not in your email. When it is issued, a notification will appear in the Announcements section of samagama.in. Log in and click Download Offer Letter from the Offer Letter card on your dashboard. If you do not see it, do a hard refresh and log back in — or simply ask Yaksha in the chat on samagama.in.
+
+4.4 Will I get a certificate? §
+Yes — every intern who completes the internship gets a certificate from Vicharanashala, IIT Ropar. The internship is genuinely demanding; candidates who drop out mid-way do not get a certificate. Finishing means something, because the bar is high.
+
+4.5 How do I confirm my internship dates? §
+Once you have opted into VINS in the chat with Yaksha (see §4.2), log in to samagama.in. On the dashboard, you will see a yellow card titled "🗓️ Confirm your internship dates". The two date pickers pre-fill with sensible defaults for the current cohort. If those work for you, hit "Save dates". Otherwise edit them to your earliest realistic start — your end must be on or before 31 December 2026.
+
+A green confirmation appears once saved. You can edit any time from the same card.
+
+Order doesn't matter. You can save your dates before or after uploading your NOC — both paths work.
+
+The dates you enter must match the internship period your HOD signs off on in your NOC. If you need to change the period later, edit the dates on the same card and upload a fresh NOC matching the new period.
+
+4.6 I am a minor/major in AI student, can I join the programme? I don't need a NOC as I am from IIT Ropar §
+Minor/Major in AI course from IIT Ropar is a certification course and there will be a different track of internship equivalent to them. Kindly write to us separately for this. For you to be part of this internship programme you should be a registered student in a UG/PG programme with some university. This internship is exclusively meant for the students only and not for working professionals.
+
+4.7 How do I accept the offer letter? §
+Acceptance happens entirely on your dashboard at samagama.in — there is no email reply, and nothing to paste or post. The Offer Letter card guides you through three steps, and your offer is recorded as accepted only once all three are complete. Please finish them within 5 days of your offer being issued:
+
+Offer letter — download your offer letter, sign the *Acceptance of
+Offer* block at the bottom of it, and upload the signed PDF on the card.
+
+Terms & Conditions (Participation Agreement) — read each section and
+tick the box to confirm you have understood it.
+
+Honor Code — download the Honor Code, sign the last page, and upload the
+signed PDF.
+
+Each PDF upload is capped at 1 MB; to correct a file, just upload a new copy — the latest replaces the previous one. The card updates as you complete each step and shows your offer as accepted once all three are done. There is no acceptance email to send and no statement to type.
+
+If you have completed all three steps and the card has not updated after a refresh, log in to samagama.in and describe the issue to Yaksha in the chat — Yaksha will flag it for the team.
+
+4.8 Can I change my internship dates? §
+Before the offer letter is issued: yes — open the Confirm Internship Dates card on your dashboard and edit the dates at any time. Your end date must be on or before 31 December 2026.
+
+After the offer letter is issued: no. Dates are final and will not be changed. If the confirmed dates do not work for you, please follow our LinkedIn page for announcements about future cohorts: linkedin.com/company/vicharanashala
+
+If you updated your NOC to reflect new dates before the offer letter was issued, upload the revised NOC via the dashboard.
+
+4.9 My NOC is not ready but my start date is approaching. What do I do? §
+Get your signed institutional NOC uploaded as soon as you can. Your start date cannot be honoured until your official NOC is uploaded and validated by us — the internship formally begins only after the NOC is validated. If your NOC is not in by your chosen start date, your start simply shifts to whenever it is validated. (The earlier self-declaration / provisional-offer option was retired on 2026-05-27 and is no longer accepted, so a signed institutional NOC is the only way forward.)
+
+4.10 When does my internship actually begin? Will I receive a notification on the day? §
+Your internship begins on the start date you confirmed on the dashboard — the same date printed on your offer letter — provided your official institutional NOC has been uploaded and validated by us by then. If your validated NOC is not yet in on your start date, your start shifts to the day it is validated. There is no separate "your internship has begun" email, chat message, or dashboard notification on the day itself; the start date is the start date.
+
+On the morning of your start date, log in to samagama.in. Yaksha will guide you through the Day-1 steps of the Bronze phase. If your dashboard appears unchanged on that morning, do a hard refresh and re-login. If it still looks the same, describe the issue to Yaksha in the chat and Yaksha will flag it for the team.
+
+You can review or change your confirmed dates via the Confirm Internship Dates card on your dashboard (see §4.5 to set, §4.8 for date-change rules).
+
+4.11 Can I switch from VINS (online) to VISE (offline) after being selected? §
+The two tracks are finalised at the interview stage, and we do not move candidates between them. VISE has a fixed on-campus capacity planned around mentor bandwidth, hostel availability, and stipend allocation — once the shortlist is set, it stays set. VINS is not a consolation track. The project, the mentor, and the certificate are the same as VISE — what differs is the mode (online) and the absence of a fellowship. Many interns find the online format more effective. Your best path forward is to confirm your VINS start dates and get your NOC uploaded — you're already in a strong position.
+
+4.12 Can I change my internship dates after the offer letter? §
+No. Once your offer letter has been issued, the dates you confirmed are final. They will not be changed at this stage.
+
+If the confirmed dates do not work for you, please follow our LinkedIn page for announcements about future cohorts: linkedin.com/company/vicharanashala
+
+5. Work and projects §
+5.1 What will I work on? §
+A real open-source project from Vicharanashala's portfolio — assigned based on your background and the lab's current needs. Areas range across AI/ML, web development, NLP, computer vision, agriculture-tech (Annam.AI), education-tech (ViBe), and open-source infrastructure. We do not pre-publish the exact problem; you choose to join knowing the lab will assign the project.
+
+5.2 How many hours per day? §
+Plan for 6 to 10 hours a day, sometimes more during the build phase. This is a full-time internship for the two-month window. Most candidates who drop out are juggling something else — VINS expects your full attention.
+
+5.3 Who is my mentor? §
+You will work with the lab's research and engineering team. The exact mentor depends on the project. The model is fluid — you will get help from a senior researcher one day, a peer the next, and someone else for a different question. That is how real open-source work happens.
+
+5.4 Is there a stipend? §
+No. The internship is unpaid. Stellar performers may be recognised with a discretionary stipend at the lab's option, but this is not promised or expected.
+
+5.5 Do I need my own laptop? Should I preload any software? §
+Yes — a personal laptop is required. We prefer that you bring a laptop running Linux or macOS. If you use Windows, please install a terminal that can SSH and run Unix-style commands — for example, Windows Subsystem for Linux (WSL) is a clean choice; a tool such as PuTTY also works. You will be SSH-ing into machines and using the command line as part of the work.
+
+We do not maintain a fixed software-preload list — your mentor will guide you on the specific tools needed once your project is assigned.
+
+5.6 I am using a different email on GitHub / Zoom / the learning platform. Is that okay? §
+No. Your registered email is your sole identifier across all programme platforms. Progress tracking, course completion, and certificate issuance are all tied to it. Mismatches between platforms cannot be retroactively corrected — ensure you use your registered email everywhere from day one.
+
+5.7 When will I be assigned a mentor? §
+Mentors are not assigned at the start of the internship. You will be assigned a mentor when you move on to the project phase of VINS, which comes later in the timeline. Before that, you must complete the mandatory coursework of the Bronze phase (see §1.3). Once coursework is complete and you are placed on a project, your mentor will reach out.
+
+If you are looking for a Discord server, please note: we do not run a Discord server. See §6.1 for the official communication channels.
+
+6. Code of conduct — communication channels §
+6.1 What are the official communication channels? §
+Official channels only. The Announcements section on samagama.in is how we notify you — all programme notifications are posted there (we no longer send notifications by email). Log in and check it regularly during working hours; sessions are announced at least 1 hour before they begin.
+
+To get help with a question or problem, follow this order:
+
+Zoom breakout room. During every live session there is a breakout
+room — use it. Talk to your peers. Most questions are resolved here.
+
+Discussion forum. For anything not resolved in the breakout, post
+on the discussion forum. The link was sent to you in your sign-up (registration) email when you first created your account on samagama.in, and is also posted in the Announcements section. This is where you troubleshoot and discuss with your peers and the team.
+
+Yaksha chat on samagama.in. If the forum did not resolve it,
+bring it to Yaksha. Explain what you tried at each prior step — without that, Yaksha cannot help you well. When Yaksha cannot answer, it will flag your query to the team directly and the reply will come back to you through the same chat window.
+
+There is no separate ticket form and no email address to write to. Everything goes through Yaksha.
+
+WhatsApp support is cancelled. There is no WhatsApp troubleshooting group. Not being on WhatsApp does not put you at any disadvantage — all information goes through the channels above.
+
+Unofficial groups are strictly prohibited. Creating, joining, or operating any WhatsApp group, Telegram channel, Discord server, or any other peer-coordinated space involving interns or a subset of interns — or contacting another intern through their personal phone number — is against the code of conduct. Any complaint or report of this will lead to the immediate termination of your internship.
+
+You may connect with fellow interns over LinkedIn and email.
+
+7. Interviews Related §
+7.1 My interview is not marked as complete on the dashboard — what do I do? §
+A data-sync issue sometimes occurs where the chat session closes but the interview record doesn't update to "completed." The team will check your record and manually mark it as complete if needed. You will be unblocked within 1–2 hours. Apologies for the inconvenience. If you dont hear from us and if your interview continues to be marked incomplete please write to us on internship@vicharanashala.ai

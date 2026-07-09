@@ -28,26 +28,28 @@ export function AdminZoom() {
   const [meetings, setMeetings] = useState<ZoomMeeting[]>([]);
   const [insights, setInsights] = useState<ZoomInsight[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [health, setHealth] = useState<{ circuitState: string; failingMeetings: number; deadLetterCount: number } | null>(
-    null
-  );
+  const [health, setHealth] = useState<{ circuitState: string; failingMeetings: number; deadLetterCount: number } | null>(null);
+
+  const [promotingId, setPromotingId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   function load() {
     api.get('/knowledge/meetings').then(({ data }) => setMeetings(data.meetings));
     api.get('/knowledge/insights').then(({ data }) => setInsights(data.insights));
     api.get('/knowledge/health').then(({ data }) => setHealth(data.health));
-    api.get('/public/categories').then(({ data }) => setCategories(data.categories));
+    api.get('/public/categories').then(({ data }) => {
+      setCategories(data.categories);
+      if (data.categories.length > 0) setSelectedCategory(data.categories[0]._id);
+    });
   }
 
   useEffect(load, []);
 
-  async function handlePromote(id: string) {
-    const categoryId = prompt(
-      `Promote to which category?\n${categories.map((c) => `${c.name} (${c._id})`).join('\n')}`
-    );
-    if (!categoryId) return;
+  async function confirmPromotion() {
+    if (!promotingId || !selectedCategory) return;
     try {
-      await api.post(`/knowledge/insights/${id}/promote`, { categoryId });
+      await api.post(`/knowledge/insights/${promotingId}/promote`, { categoryId: selectedCategory });
+      setPromotingId(null);
       load();
     } catch (err: any) {
       alert(err?.response?.data?.error || 'Promotion failed');
@@ -65,15 +67,9 @@ export function AdminZoom() {
 
       {health && (
         <div className="mb-6 flex gap-4 rounded-lg border border-slate-200 p-3 text-sm">
-          <span>
-            Circuit: <strong>{health.circuitState}</strong>
-          </span>
-          <span>
-            Failing: <strong>{health.failingMeetings}</strong>
-          </span>
-          <span>
-            Dead-lettered: <strong>{health.deadLetterCount}</strong>
-          </span>
+          <span>Circuit: <strong>{health.circuitState}</strong></span>
+          <span>Failing: <strong>{health.failingMeetings}</strong></span>
+          <span>Dead-lettered: <strong>{health.deadLetterCount}</strong></span>
         </div>
       )}
 
@@ -97,14 +93,25 @@ export function AdminZoom() {
           <div key={insight._id} className="rounded-lg border border-slate-200 p-3">
             <p className="text-sm font-medium text-slate-900">{insight.question}</p>
             <p className="mt-1 text-sm text-slate-600">{insight.answer}</p>
-            <div className="mt-2 flex gap-2">
-              <Button variant="secondary" onClick={() => handlePromote(insight._id)}>
-                Promote to FAQ
-              </Button>
-              <Button variant="ghost" onClick={() => handleReject(insight._id)}>
-                Reject
-              </Button>
-            </div>
+
+            {promotingId === insight._id ? (
+              <div className="mt-3 flex gap-2">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="rounded border border-slate-300 px-2 py-1 text-sm"
+                >
+                  {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                </select>
+                <Button onClick={confirmPromotion}>Confirm</Button>
+                <Button variant="ghost" onClick={() => setPromotingId(null)}>Cancel</Button>
+              </div>
+            ) : (
+              <div className="mt-2 flex gap-2">
+                <Button variant="secondary" onClick={() => setPromotingId(insight._id)}>Promote to FAQ</Button>
+                <Button variant="ghost" onClick={() => handleReject(insight._id)}>Reject</Button>
+              </div>
+            )}
           </div>
         ))}
         {insights.length === 0 && <p className="text-sm text-slate-500">Nothing pending review.</p>}

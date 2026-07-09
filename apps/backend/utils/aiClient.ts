@@ -28,7 +28,7 @@ async function getGenAI() {
 export async function chatGemini(prompt: string, options: ChatOptions = {}): Promise<string> {
   const genAI = await getGenAI();
   const model = genAI.getGenerativeModel({
-    model: options.model || 'gemini-1.5-flash',
+    model: options.model || 'gemini-2.5-flash',
     systemInstruction: options.systemPrompt,
     generationConfig: {
       temperature: options.temperature ?? 0.2,

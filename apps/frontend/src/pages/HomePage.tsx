@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../utils/api';
 import { SearchBar } from '../components/ui/SearchBar';
+import { StatusPill } from '../components/ui/StatusPill';
 import type { Faq } from '../utils/types';
 
 export function HomePage() {
@@ -15,46 +16,59 @@ export function HomePage() {
   }, []);
 
   return (
-    <div className="mx-auto mt-16 max-w-2xl px-4 text-center">
-      <h1 className="text-3xl font-semibold text-slate-900">Crowd Source FAQ</h1>
-      <p className="mt-3 text-slate-600">
-        Search the knowledge base, or ask the community if you can't find your answer.
-      </p>
+    <div>
+      <section className="border-b border-mist bg-white">
+        <div className="mx-auto max-w-3xl px-6 py-20 text-center animate-fade-up">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-forest">
+            The knowledge base that answers itself
+          </span>
+          <h1 className="mt-4 font-display text-5xl font-semibold leading-tight text-ink sm:text-6xl">
+            Ask once. It's answered
+            <br />
+            for everyone after.
+          </h1>
+          <p className="mx-auto mt-5 max-w-lg text-ink-soft">
+            Search the archive, or ask the community — the AI assistant, your peers, or a moderator will get
+            you the answer.
+          </p>
 
-      <div className="mt-6">
-        <SearchBar onSearch={(q) => navigate(`/faq?q=${encodeURIComponent(q)}`)} />
-      </div>
+          <div className="mx-auto mt-8 max-w-xl">
+            <SearchBar large onSearch={(q) => navigate(`/faq?q=${encodeURIComponent(q)}`)} />
+          </div>
 
-      {!isLoading && (
-        <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-          {isAuthenticated ? (
-            <>
-              Logged in as <strong>{user?.name}</strong> — role:{' '}
-              <code className="rounded bg-slate-200 px-1">{user?.role}</code>
-            </>
-          ) : (
-            'Not logged in — you can still search and browse FAQs as a guest.'
+          <p className="mt-4 text-xs text-ink-soft">
+            or try{' '}
+            <Link to="/faq/voice" className="text-forest underline underline-offset-2">
+              voice search
+            </Link>
+          </p>
+
+          {!isLoading && isAuthenticated && (
+            <div className="mx-auto mt-8 inline-flex items-center gap-2 rounded-full border border-mist-dark bg-paper px-4 py-1.5 text-sm text-ink-soft">
+              Welcome back, <strong className="text-ink">{user?.name}</strong>
+              <StatusPill tone="forest">{user?.role}</StatusPill>
+            </div>
           )}
         </div>
-      )}
+      </section>
 
       {trending.length > 0 && (
-        <div className="mt-10 text-left">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Trending questions
+        <section className="mx-auto max-w-3xl px-6 py-14">
+          <h2 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.15em] text-ink-soft">
+            Trending in the archive
           </h2>
-          <ul className="space-y-2">
-            {trending.map((faq) => (
-              <li
+          <div className="grid gap-2 sm:grid-cols-2">
+            {trending.slice(0, 6).map((faq) => (
+              <button
                 key={faq._id}
-                className="cursor-pointer rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-800 hover:border-emerald-400"
                 onClick={() => navigate('/faq')}
+                className="spine group rounded-r-lg border border-l-0 border-mist bg-white px-4 py-3 text-left text-sm text-ink transition-shadow hover:shadow-sm"
               >
-                {faq.question}
-              </li>
+                <span className="line-clamp-2 group-hover:text-forest">{faq.question}</span>
+              </button>
             ))}
-          </ul>
-        </div>
+          </div>
+        </section>
       )}
     </div>
   );

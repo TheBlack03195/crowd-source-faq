@@ -5,7 +5,6 @@ import { ZoomMeeting } from '../models/ZoomMeeting.js';
 import { promoteInsightToFaq } from '../services/knowledgeBase.js';
 import { getZoomHealth } from '../utils/zoomHealth.js';
 
-
 export async function listTranscriptKnowledge(req: Request, res: Response) {
   const { page = '1', limit = '20' } = req.query as Record<string, string>;
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
@@ -21,7 +20,6 @@ export async function listTranscriptKnowledge(req: Request, res: Response) {
 
   res.json({ items, total, page: pageNum, limit: limitNum });
 }
-
 
 export async function listZoomInsights(req: Request, res: Response) {
   const { reviewStatus = 'pending_review' } = req.query as Record<string, string>;
@@ -51,7 +49,6 @@ export async function rejectInsight(req: Request, res: Response) {
   res.json({ insight });
 }
 
-
 export async function listZoomMeetings(req: Request, res: Response) {
   const { status } = req.query as { status?: string };
   const filter: Record<string, unknown> = {};
@@ -59,7 +56,6 @@ export async function listZoomMeetings(req: Request, res: Response) {
   const meetings = await ZoomMeeting.find(filter).sort({ createdAt: -1 }).limit(100);
   res.json({ meetings });
 }
-
 
 export async function zoomHealthCheck(_req: Request, res: Response) {
   const health = await getZoomHealth();

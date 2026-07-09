@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { protect } from '../middleware/auth.js';
+import { protect, optionalAuth  } from '../middleware/auth.js';
 import { adminOnly } from '../middleware/admin.js';
 import { validateBody } from '../utils/validation.js';
-
+import { checkDuplicatePost, recordDuplicateAverted, checkDuplicateSchema } from '../controllers/duplicateCheckController.js';
 import { listPosts, getPost, relatedPosts } from '../controllers/postReadsController.js';
 import {
   createPost,
@@ -37,8 +37,11 @@ const router = Router();
 router.get('/comments/reported', ...adminOnly, listReportedComments);
 
 
-router.get('/posts', listPosts);
-router.get('/posts/:id', getPost);
+router.get('/posts', optionalAuth, listPosts);
+router.post('/posts', protect, validateBody(createPostSchema), createPost);
+router.post('/posts/check-duplicate', protect, validateBody(checkDuplicateSchema), checkDuplicatePost);
+router.post('/posts/duplicate-averted', protect, recordDuplicateAverted);
+router.get('/posts/:id', optionalAuth, getPost);
 router.get('/posts/:id/related', relatedPosts);
 router.post('/posts', protect, validateBody(createPostSchema), createPost);
 router.patch('/posts/:id', protect, validateBody(updatePostSchema), editPost);
@@ -63,5 +66,6 @@ router.post('/posts/:postId/comments/:commentId/dismiss-report', ...adminOnly, d
 
 router.post('/bookmarks/:postId', protect, toggleBookmark);
 router.get('/bookmarks', protect, listBookmarks);
+
 
 export default router;

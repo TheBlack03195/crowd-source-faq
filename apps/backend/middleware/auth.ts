@@ -23,6 +23,25 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
+  try {
+    const header = req.headers.authorization;
+    if (!header?.startsWith('Bearer ')) {
+      return next();
+    }
+    const token = header.slice('Bearer '.length).trim();
+
+    const { user, decoded } = await verifyAndLoadUser(token);
+
+    req.user = user;
+    req.auth = { userId: decoded.userId, role: decoded.role, jti: decoded.jti };
+    next();
+  } catch {
+    
+    next();
+  }
+}
+
 export function authorize(...roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
